@@ -1,0 +1,9 @@
+Se debe instalar mosquitto (https://mosquitto.org/download/) en PC "broker".
+
+El ejemplo para la ESP32 envía un mensaje al broker cada 1 segundo al "tópico" "trenes/carrol/dato_enviado". Se puede revisar el funcionamiento usando
+
+.\mosquitto_sub.exe -v -t "trenes/carrol/dato_enviado"
+
+Ojo que se debe configurar la SSID y password para el punto de acceso local (están las de la casa de Andrés en el ejemplo) y se debe indicar la ip del dispositivo donde se instaló mosquitto (en el ejemplo está la ip del desktop de Andrés).
+
+Además se pueden enviar mensajes desde cualquier dispositvo en la lan a las listas a las que se suscribe la ESP32. En la foto se ve un ejemplo en el tópico "trenes/carrol/p" (que sería la ganancia proporcional de un PID que podría estar siendo calculado por el micro.

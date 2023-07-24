@@ -1,0 +1,8 @@
+Ajustar paámetros de control y algo que muestre eso por wi-fi
+Mandar datos por wi-fi Raspberry*
+leer señales de interés
+cambiar el modo de control a través de ajustes}
+rEFERENCIAS de distancia* enviar a los robots
+
+
+

@@ -1,0 +1,35 @@
+SI NO SE SUSCRIBE EL ROBOT A LOS TOPICOS SE DEBE DESCONECTAR EL WIFI DEL PC Y VOLVER A CONECTAR
+INICIALIZACION DEL BROKER
+cd c:\Program Files\mosquitto
+mosquitto.exe
+
+En una consola suscribirse a:
+
+mosquitto_sub.exe -v -t "esp32/estado"
+
+En otra consola publicar a los topicos correspondientes:
+
+mosquitto_pub.exe -t "flota/robot0/controlador_distancia/delta" -m 1
+
+mosquitto_pub.exe -t "flota/robot0/controlador_distancia/distancia" -m 15
+
+mosquitto_pub.exe -t "flota/robot0/controlador_posicion/p" -m 50
+
+mosquitto_pub.exe -t "flota/robot0/controlador_posicion/i" -m 70
+
+mosquitto_pub.exe -t "flota/robot0/controlador_posicion/d" -m 0
+
+mosquitto_pub.exe -t "flota/robot0/controlador_velocidad/p" -m 75
+
+mosquitto_pub.exe -t "flota/robot0/controlador_velocidad/i" -m 90
+
+mosquitto_pub.exe -t "flota/robot0/controlador_velocidad/d" -m 0
+
+mosquitto_pub.exe -t "flota/robot0/controlador_distancia/p" -m 6
+
+mosquitto_pub.exe -t "flota/robot0/controlador_distancia/i" -m 0
+
+mosquitto_pub.exe -t "flota/robot0/controlador_distancia/d" -m 0
+
+mosquitto_pub.exe -t "flota/robot0/fuzzy/curva" -m 0
+
