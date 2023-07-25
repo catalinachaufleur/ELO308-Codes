@@ -21,8 +21,9 @@ html {
  */
 
 body {
-  margin: 0;
+  margin: 20px;
 }
+
 
 /**
  * Render the `main` element consistently in IE.
@@ -336,10 +337,35 @@ summary {
  * Add the correct display in IE 10+.
  */
 
-template {
-  display: none;
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px; /* Espacio entre los conjuntos de imagen y texto */
 }
 
+.container a {
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.container a img {
+  width: 250px; /* Ajusta el ancho de las imágenes según tus necesidades */
+}
+
+.header-container {
+  text-align: left;
+}
+
+.gray-box {
+  background-color: #ccc;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: justify;
+  color: black;
+  font-size: 18px;
+}
 /**
  * Add the correct display in IE 10.
  */
