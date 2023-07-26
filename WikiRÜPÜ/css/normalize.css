@@ -366,6 +366,35 @@ summary {
   color: black;
   font-size: 18px;
 }
+
+.sidebar {
+  width: 300px;
+  background-color: #f0f0f0;
+  padding: 20px;
+}
+
+.sidebar a {
+  display: block;
+  margin-bottom: 10px;
+  text-decoration: none;
+  color: #333;
+}
+
+.sidebar a:hover {
+  background-color: #ddd;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+.sidecontainer {
+  display: flex;
+}
+
+
+
 /**
  * Add the correct display in IE 10.
  */
