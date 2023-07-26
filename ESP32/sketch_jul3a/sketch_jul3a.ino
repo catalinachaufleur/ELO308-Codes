@@ -3,8 +3,8 @@
 
 WiFiServer server(1234);  // Define el objeto del servidor en el puerto 1234
 
-const char* ssid = "fh_6625b0";      // Nombre de la red Wi-Fi
-const char* password = "wlan99da4f";  // Contraseña de la red Wi-Fi
+const char* ssid = "fvp";      // Nombre de la red Wi-Fi
+const char* password = "nomeacuerdo";  // Contraseña de la red Wi-Fi
 
 #define ain1  16
 #define ain2  27
