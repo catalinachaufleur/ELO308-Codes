@@ -28,11 +28,11 @@
 %     writePWMDutyCycle(a,'D17',0);
 % end
 
+
 % 
 % ip = '192.168.1.20'; % Dirección IP de la ESP32
 % puerto = 80; % Puerto utilizado en la ESP32
 % esp32 = tcpclient(ip, puerto);
-
  %% ------- Lee Sensor de Distancia -------------------
 % esp32 = tcpclient('192.168.1.100', 1234);
 % fopen(esp32);
@@ -61,9 +61,9 @@ disp(response);
 for x = 5:20 
     vel = 5 * x
     writeline(esp32, int2str(vel));
-    pause(0.25);
+    pause(0.5);
 end
 
-writeline(esp32,'stop');
+ 'stop\n');
 clear esp32;
 
