@@ -1,6 +1,5 @@
 //Esta funcion es valida para la Esp32
 #include <analogWrite.h>
-
 /*  Función de motor  */
 /*  Pines motor 1 (derecho)*/
 #define ain1  16
@@ -8,12 +7,13 @@
 #define pwm_a  17
 
 /*  Pines motor 2 (izquierdo)*/
-#define bin1  13
-#define bin2  12 //Recordar editar estooo
+#define bin1  12
+#define bin2  13
 #define pwm_b  14
 
+#define resolucion 1023
 void motor(int Velocidad_motor_izq, int Velocidad_motor_der)
-{
+{ 
   /*
    * Función de motor motor(M1, M2).
    * Mueve los motores con velocidad M1 y M2 con un valor entero entre 0 y 1024

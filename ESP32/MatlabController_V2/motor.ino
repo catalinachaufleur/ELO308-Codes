@@ -9,7 +9,7 @@
 
 /*  Pines motor 2 (izquierdo)*/
 #define bin1  13
-#define bin2  12 //Recordar editar estooo
+#define bin2  12
 #define pwm_b  14
 
 void motor(int Velocidad_motor_izq, int Velocidad_motor_der)

@@ -5,7 +5,8 @@
 #include <VL53L0X.h>
 
 VL53L0X sensor;
-
+String velocidad = "0";
+int vel;
 
 WiFiServer server(1234);  // Define el objeto del servidor en el puerto 1234
 
@@ -21,8 +22,8 @@ const char* password = "nomeacuerdo";  //"PorgyB329";  // Contraseña de la red 
 #define pwm_a 17
 
 /*  Pines motor 2 (izquierdo)*/
-#define bin1  12
-#define bin2  13
+#define bin1  13
+#define bin2  12
 #define pwm_b  14
 
 void setup() {
@@ -72,31 +73,28 @@ void loop() {
         client.println("Comando recibido: " + command);  // Envía una respuesta al cliente
         //Serial.println("Esperando código");
     
-        if (command == "codigo1") {
-          while (sensor.readRangeContinuousMillimeters() * 0.1 > 10) {
-            client.println(sensor.readRangeContinuousMillimeters() * 0.1);
-            Serial.println(sensor.readRangeContinuousMillimeters() * 0.1);
-          }
-          client.stop();  
-        }
-
-        if (command == "codigo2") {
-          String velocidad = "0";
+        if (command == "On") {
+          
           while (1) {
             velocidad = client.readStringUntil('\n');
             velocidad.trim();
             if (velocidad == "stop"){
               break;
             }
-            int vel = velocidad.toInt();
-            Serial.println(vel);
-            motor(vel,vel);        
+            if (velocidad != ""){
+              vel = velocidad.toInt();
+            } 
+            Serial.println("Velocidad: " + vel);
+            motor(vel,vel);
+            client.println(sensor.readRangeContinuousMillimeters() * 0.1);
+            Serial.print("Disntancia: ");
+            Serial.println((sensor.readRangeContinuousMillimeters() * 0.1));        
           }
         }
       }
     }
+    motor(0,0);
     client.stop();  // Cierra la conexión con el cliente
     Serial.println("Cliente desconectado");
 }
   }
-  
