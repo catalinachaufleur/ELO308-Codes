@@ -1,7 +1,5 @@
-# RÜPÜ
-Este repositorio cuenta con la documentación en HTML paara utilizar la plataforma, además cuenta con los códigos correspondientes al desarrollo de la intefaz gráfica que facilita su experencia de uso.
-## WikiRÜPÜ
+# Pasos pata Ejecutar Matlab Controller
 
-Al hacer click en index.html se encuentra el acceso a los tutoriales de uso de RÜPÜ.
-
-<img src="./WikiRÜPÜ/img/esp.jpg" width="200" height="200" />
+/ELO308-Codes/
+ Ejecutar el código Arduino de MatlabController_V2 y revisar la IP asignada
+ Ejecutar el código de Matlab App MatlabContoller_V2 y editar la IP
