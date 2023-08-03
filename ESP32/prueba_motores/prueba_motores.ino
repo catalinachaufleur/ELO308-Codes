@@ -3,8 +3,8 @@ void setup() {
 }
 
 void loop() {
-  motor(-400,-400);
-
+  motor(-200,-200);
+  delay(500);
 }
 
   
