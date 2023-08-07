@@ -1,19 +1,7 @@
-//Esta funcion es valida para la Esp32
-#include <analogWrite.h>
-
 /*  Función de motor  */
-/*  Pines motor 1 (derecho)*/
-#define ain1  16
-#define ain2  27
-#define pwm_a  17
-
-/*  Pines motor 2 (izquierdo)*/
-#define bin1  12
-#define bin2  13 //Recordar editar estooo
-#define pwm_b  14
 
 void motor(int Velocidad_motor_izq, int Velocidad_motor_der)
-{
+{ 
   /*
    * Función de motor motor(M1, M2).
    * Mueve los motores con velocidad M1 y M2 con un valor entero entre 0 y 1024
@@ -27,46 +15,57 @@ void motor(int Velocidad_motor_izq, int Velocidad_motor_der)
   pinMode(bin2, OUTPUT); 
 
   analogWriteFrequency(500);
-  
+  if (Velocidad_motor_der >= resolucionPWM){
+    Velocidad_motor_der=resolucionPWM;  
+  }
+  else if(Velocidad_motor_der <= -resolucionPWM){
+    Velocidad_motor_der=-resolucionPWM;
+  }
+  if (Velocidad_motor_izq >= resolucionPWM){
+    Velocidad_motor_izq=resolucionPWM;  
+  }
+  else if(Velocidad_motor_izq <= -resolucionPWM){
+    Velocidad_motor_izq=-resolucionPWM;
+  }
   if (Velocidad_motor_der > 0)
   {
     digitalWrite(ain1, HIGH); 
     digitalWrite(ain2, LOW);
-    analogWrite(pwm_a, Velocidad_motor_der); 
+    analogWrite(pwm_a, Velocidad_motor_der,resolucionPWM); 
   }
 
   else if (Velocidad_motor_der < 0)
   {
     digitalWrite(ain1, LOW); 
     digitalWrite(ain2, HIGH);
-    analogWrite(pwm_a, -Velocidad_motor_der); 
+    analogWrite(pwm_a, -Velocidad_motor_der,resolucionPWM); 
   }
 
   else
   {
     digitalWrite(ain1, LOW); 
     digitalWrite(ain2, LOW);
-    analogWrite(pwm_a, Velocidad_motor_der); 
+    analogWrite(pwm_a, Velocidad_motor_der,resolucionPWM); 
   }
 
   if (Velocidad_motor_izq > 0)
   {
     digitalWrite(bin1, HIGH); 
     digitalWrite(bin2, LOW);
-    analogWrite(pwm_b, Velocidad_motor_izq); 
+    analogWrite(pwm_b, Velocidad_motor_izq,resolucionPWM); 
   }
 
   else if (Velocidad_motor_izq < 0)
   {
     digitalWrite(bin1, LOW); 
     digitalWrite(bin2, HIGH);
-    analogWrite(pwm_b, -Velocidad_motor_izq); 
+    analogWrite(pwm_b, -Velocidad_motor_izq,resolucionPWM); 
   }
 
   else
   {
     digitalWrite(bin1, LOW); 
     digitalWrite(bin2, LOW);
-    analogWrite(pwm_b, Velocidad_motor_izq); 
+    analogWrite(pwm_b, Velocidad_motor_izq,resolucionPWM); 
   }
 }

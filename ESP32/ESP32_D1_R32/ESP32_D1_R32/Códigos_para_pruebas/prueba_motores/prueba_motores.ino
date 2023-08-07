@@ -3,7 +3,7 @@ void setup() {
 }
 
 void loop() {
-  motor(300,300);
+  motor(100,100);
   delay(200);
 
 

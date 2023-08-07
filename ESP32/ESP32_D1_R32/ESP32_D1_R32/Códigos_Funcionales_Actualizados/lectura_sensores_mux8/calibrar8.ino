@@ -34,9 +34,11 @@ void calibrarSensores() {
     // TO DO: Autocalibración
     if (i < 50000) {
       motor(-80, -80);
+      //delay(200);
     }
     else {
       motor(80, 80);
+      //delay(200);
     }
     for (byte i = 0; i <= 15; i++) {
       digitalWrite(25, i & 0x01  );
