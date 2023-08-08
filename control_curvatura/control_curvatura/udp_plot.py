@@ -16,13 +16,15 @@ import pymysql
 import csv
 import socket
 #Ajustables
-file_name = "C:\\Users\\Carlos\\Documents\\UTFSM\\autitos\\software\\plataforma_movil\\codigos_actualizados\\robot_final\\fuzzy\\monitoreo.csv"  # archivo csv
+file_name = "C:\\Users\\56975\\Documents\\Catalina\\ELO308-Codes\\ELO308-Codes\\monitoreo.csv"  # archivo csv
 
-UDP_IP = "192.168.1.100" # ip del computador que recibe datos (mismo que el que corre este script)
+UDP_IP = "192.168.1.101" # ip del computador que recibe datos (mismo que el que corre este script)
 UDP_PORT = 1234
+
 #UDP
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind((UDP_IP, UDP_PORT))
+
 #creacion de archivo CSV
 texto = open(file_name,'w')
 #estado = "T,"+String(Input_d)+","+String(d_ref)+","+String(vel_ref)+","+String(Input_vel)+","+String(Input_theta)+","+String(Output_d)+","+String(Output_vel)+","+String(Output_theta);
