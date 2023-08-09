@@ -22,7 +22,7 @@ UDP_PORT_TX = 0
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
 
 
-
+"""
 ##---------------------------------------------------------
 UDP_IP = "192.168.1.101" # ip del computador que recibe datos (mismo que el que corre este script)
 UDP_PORT = 1234
@@ -38,6 +38,7 @@ texto = open(file_name,'w')
 texto.write('Robot,Delta_muestra,Input_d,d_ref,vel_ref,Input_vel,Input_theta,Output_d,Output_vel,Output_theta'+'\n')
 
 texto.close()
+"""
 
 #------------------------------------
 
@@ -141,12 +142,6 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         #print(targetIP)
         return targetIP
 
-    def signal_monitor():
-        pass
-
-
-
-        
         
     def open_monitor_window(self):
         monitor_window = tk.Toplevel(self)
@@ -161,34 +156,43 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         selected_letter = tk.StringVar()
         letter_combobox = ttk.Combobox(monitor_window, textvariable=selected_letter, values=letras)
 
+        labelRobot = tk.Label(monitor_window, text="Escoja el robot(?)")
+
         #setar en el Lider
         letter_combobox.set(self.ip_entry_widgets[0][1].get())
-        #Posicionar label
-        letter_combobox.grid(row=0, column=2, padx=10, pady=10)
+        
 
         #botones de monitoreo
         #calibrar_button_monitor = tk.Button(monitor_window, text="Calibrar", command=self.clickCalibrarButton)
         iniciar_button_monitor = tk.Button(monitor_window, text="Iniciar", command=self.clickIniciarButton)
         stop_button_monitor = tk.Button(monitor_window, text="Detener", command=self.clickStopButton)
 
-        # Posicionar los sliders
+        # Posicionar los sliders y labels
+        labelV = tk.Label(monitor_window, text="Velocidad")
         sliderV = tk.Scale(monitor_window, from_=10, to=30, orient="horizontal")
-        sliderV.grid(row=1, column=2, padx=10, pady=10)
         sliderV.bind("<ButtonRelease-1>", lambda event: self.updateValueV(sliderV.get(),self.getIP(letter_combobox.get())))
 
-
+        labelD = tk.Label(monitor_window, text="Distancia")
         sliderD = tk.Scale(monitor_window, from_=10, to=25, orient="horizontal")
-        sliderD.grid(row=2, column=2, padx=10, pady=10)
         sliderD.bind("<ButtonRelease-1>", lambda event: self.updateValueD(sliderD.get(),self.getIP(letter_combobox.get())))
 
         
+       
+        '''----------------Posicionar elementos en la App--------------''' 
         # Posicionar los botones 
         #calibrar_button_monitor.grid(row=0, column=0, padx=10, pady=10)
-        iniciar_button_monitor.grid(row=1, column=0, padx=10, pady=10)
-        stop_button_monitor.grid(row=2, column=0, padx=10, pady=10)
+        iniciar_button_monitor.grid(row=0, column=0, padx=10, pady=10)
+        stop_button_monitor.grid(row=0, column=1, padx=10, pady=10)
+        
+        labelRobot.grid(row=1, column=0, padx=10, pady=10) 
+        letter_combobox.grid(row=1, column=1, padx=10, pady=10)
 
+        #Sliders
+        labelV.grid(row=2, column=0, columnspan=3, padx=10, pady=10)
+        sliderV.grid(row=2, column=2, padx=10, pady=10)
 
-
+        labelD.grid(row=3, column=0, columnspan=3, padx=10, pady=10)
+        sliderD.grid(row=3, column=2, padx=10, pady=10)
 
 def main():
     app = Window()
