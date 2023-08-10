@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 import socket
-'''
+
 ##-------------------------
 
 import matplotlib.pyplot as plt
@@ -13,7 +13,7 @@ import sys
 import paho.mqtt.client as mqtt
 import pymysql
 import csv
-'''
+
 ####---------------------
 
 UDP_IP_TX =""
@@ -22,9 +22,8 @@ UDP_PORT_TX = 0
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
 
 
-"""
 ##---------------------------------------------------------
-UDP_IP = "192.168.1.101" # ip del computador que recibe datos (mismo que el que corre este script)
+UDP_IP = "192.168.1.102" # ip del computador que recibe datos (mismo que el que corre este script)
 UDP_PORT = 1234
 
 #UDP
@@ -38,7 +37,19 @@ texto = open(file_name,'w')
 texto.write('Robot,Delta_muestra,Input_d,d_ref,vel_ref,Input_vel,Input_theta,Output_d,Output_vel,Output_theta'+'\n')
 
 texto.close()
-"""
+
+gData = []
+gData.append([0])
+gData.append([0])
+j=0
+#Configuramos la gr�fica
+fig = plt.figure()
+ax = fig.add_subplot(111)
+hl, = plt.plot(gData[0], gData[1])
+plt.ylim(0, 30)
+plt.xlim(0,200)
+
+
 
 #------------------------------------
 
@@ -113,7 +124,7 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
 
         MESSAGE = "E/parar/si"
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
-        print("message:", MESSAGE, "IP:",IP)
+        print("message:", MESSAGE, "IP:",UDP_IP_TX)
 
 
     def updateValueV(self, value,IP):
@@ -144,7 +155,7 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
     
     def GetData(self, out_data):
         while True:
-            data, addr = sock.recvfrom(4096)
+            data, addr = sock_RX.recvfrom(4096)
             testo = str(data.decode('utf-8'))
             lista = testo.split(",")
             texto = open(file_name, "a")
@@ -160,13 +171,13 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
 
     def start_monitoring(self):
         # Crear una nueva ventana para la animación
-        animation_window = tk.Toplevel(self)
-        animation_window.title("Monitoreo de Velocidad")
-        animation_window.geometry("800x600")  # Ajusta el tamaño según tus necesidades
+        #animation_window = tk.Toplevel(self)
+        #animation_window.title("Monitoreo de Velocidad")
+        #animation_window.geometry("800x600")  # Ajusta el tamaño según tus necesidades
 
         # Agregar una etiqueta para la animación (opcional)
-        animation_label = tk.Label(animation_window, text="Velocidad:")
-        animation_label.pack(padx=10, pady=10)
+        #animation_label = tk.Label(animation_window, text="Velocidad:")
+        #animation_label.pack(padx=10, pady=10)
 
         # Configurar la gráfica para la animación
         fig = plt.figure()
@@ -179,7 +190,7 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
             hl.set_data(range(len(data[1])), data[1])
             return hl,
 
-        line_ani = animation.FuncAnimation(fig, update_line, fargs=(hl, gData), interval=50, blit=False)
+        line_ani = animation.FuncAnimation(fig, update_line, fargs=(hl, gData), interval=50, blit=False,cache_frame_data=False)
 
         plt.show()
 

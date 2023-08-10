@@ -18,7 +18,7 @@ import socket
 #Ajustables
 file_name = "C:\\Users\\56975\\Documents\\Catalina\\ELO308-Codes\\ELO308-Codes\\monitoreo.csv"  # archivo csv
 
-UDP_IP = "192.168.1.101" # ip del computador que recibe datos (mismo que el que corre este script)
+UDP_IP = "192.168.1.102" # ip del computador que recibe datos (mismo que el que corre este script)
 UDP_PORT = 1234
 
 #UDP
@@ -37,7 +37,7 @@ gData = []
 gData.append([0])
 gData.append([0])
 j=0
-#Configuramos la gráfica
+#Configuramos la grï¿½fica
 fig = plt.figure()
 ax = fig.add_subplot(111)
 hl, = plt.plot(gData[0], gData[1])
@@ -54,7 +54,7 @@ def GetData(out_data):
         texto.close()
         #print(testo)
         column = 0
-        print (lista[5])
+        print (lista[0],lista[5])
         if lista[0]=='L':
             out_data[1].append( float(lista[5]) )
             i=0
@@ -63,13 +63,13 @@ def GetData(out_data):
             
 
 
-# Función que actualizará los datos de la gráfica
-# Se llama periódicamente desde el 'FuncAnimation'
+# Funciï¿½n que actualizarï¿½ los datos de la grï¿½fica
+# Se llama periï¿½dicamente desde el 'FuncAnimation'
 def update_line(num, hl, data):
     hl.set_data(range(len(data[1])), data[1])
     return hl,
 
-# Configuramos la función que "animará" nuestra gráfica
+# Configuramos la funciï¿½n que "animarï¿½" nuestra grï¿½fica
 line_ani = animation.FuncAnimation(fig, update_line, fargs=(hl, gData),
     interval=50, blit=False)
 
