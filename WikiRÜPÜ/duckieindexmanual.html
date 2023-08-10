@@ -1,0 +1,570 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZFHTM2XNBD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZFHTM2XNBD');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The Duckietown Documentation Library">
+  <meta name="author" content="The Duckietown Team">
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+  <title>Duckietown - Documentation Library</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+  <style>
+    /*
+    Colors:
+    - Duckietown Yellow: #fec20b
+    - Duckietown Light Blue: #26a4ea
+    - Duckietown Black: #2d2d2e
+
+    */
+
+    body {
+      color: #2d2d2e;
+    }
+
+    .books-divider {
+      height: 3rem;
+      background-color: rgba(254, 194, 11, 0.42);
+      border: solid rgba(0, 0, 0, .15);
+      border-width: 1px 0;
+      box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+    }
+
+    .bi {
+      vertical-align: -.125em;
+      fill: currentColor;
+    }
+
+    .header-logo {
+      height: 80px;
+    }
+
+    .book-thumbnail-container{
+      display: flex;
+      height: 225px;
+      justify-content: center;
+      border-bottom: 1px solid lightgrey;
+    }
+
+    .book-thumbnail-img{
+      display: block;
+      margin: 30px;
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .card-title {
+      height: 4rem;
+    }
+
+    .book {
+      background-color: whitesmoke;
+    }
+
+    .btn-html {
+      border: 1px solid grey;
+    }
+
+    .spinner-xs {
+      --bs-spinner-width: 0.5rem;
+      --bs-spinner-height: 0.5rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .btn-distro {
+      margin-top: -0.15rem;
+      --bs-btn-padding-y: .05rem;
+      --bs-btn-padding-x: .75rem;
+      --bs-btn-font-size: .75rem;
+    }
+
+    /* Book category styles */
+
+    .opmanual-book .book-thumbnail-container{
+      background-color: #26a4ea99;
+    }
+
+    .devmanual-book .book-thumbnail-container{
+      background-color: #73c52699;
+    }
+
+    .course-book .book-thumbnail-container{
+      background-color: #ff8c0099;
+    }
+
+    .research-book .book-thumbnail-container{
+      background-color: #fdfdb299;
+    }
+  </style>
+
+
+  <!-- Custom styles for this template -->
+  <link href="../css/headers.css" rel="stylesheet">
+  <link href="../css/features.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<main>
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-2 border-bottom">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <img src="../images/logo.png" class="header-logo me-2" alt="">
+        <h2 class="ms-2 mt-2 ps-4" style="border-left: 1px solid black">Documentation Library</h2>
+      </a>
+
+      <ul class="nav nav-pills mt-4">
+        <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Documentation</a></li>
+        <li class="nav-item"><a href="https://duckietown.com" class="nav-link">Website</a></li>
+      </ul>
+
+    </header>
+
+    <div class="container" style="height: 2.2rem">
+      <div class="row">
+        <div class="col text-start mb-2 col-6 col-md-6 col-sm-12">
+          Versions available:
+          &nbsp;
+          <span id="distros-container">
+                        <span class="spinner-xs spinner-grow spinner-grow-sm text-primary" role="status"></span>
+                        &nbsp;
+                        <span class="spinner-xs spinner-grow spinner-grow-sm text-primary" role="status"></span>
+                        &nbsp;
+                        <span class="spinner-xs spinner-grow spinner-grow-sm text-primary" role="status"></span>
+                    </span>
+        </div>
+        <div class="col text-end mb-2 col-6 col-md-6 col-sm-12">
+          Old documentation library available <a href="https://docs-old.duckietown.org">here</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="books-divider"></div>
+
+  <div class="container px-4 py-5" id="opmanual-books">
+    <h2 class="pb-2 border-bottom">Operation manuals</h2>
+    These are the operation manuals, which contain step-by-step instructions for getting things done.
+
+    <div class="album py-5 bg-light">
+      <div class="container">
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+
+          <div class="col" id="book-opmanual-duckiebot">
+            <div class="book opmanual-book card shadow rounded-3">
+              <h5 class="card-header card-title d-flex align-items-center justify-content-center text-center">
+                The Duckiebot manual
+              </h5>
+
+              <a href="opmanual-duckiebot/">
+                <div class="book-thumbnail-container">
+                  <img class="book-thumbnail-img" src="../images/opmanual_duckiebot.png" alt="">
+                </div>
+              </a>
+
+              <div class="card-body">
+                <p class="card-text">
+                  Learn how to assemble and operate a Duckiebot.
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-muted"></small>
+                  <div class="btn-group">
+                    <a href="opmanual-duckiebot/book.pdf" role="button" class="btn btn-sm btn-outline-secondary">
+                      <i class="bi bi-file-earmark-pdf"></i>&nbsp; PDF
+                    </a>
+                    <a href="opmanual-duckiebot/" role="button" class="btn btn-sm btn-html btn-outline-danger">
+                      <b><i class="bi bi-filetype-html"></i>&nbsp; HTML</b>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col" id="book-opmanual-duckietown">
+            <div class="book opmanual-book card shadow rounded-3">
+              <h5 class="card-header card-title d-flex align-items-center justify-content-center text-center">
+                The Duckietown mayor handbook
+              </h5>
+
+              <a href="opmanual-duckietown/">
+                <div class="book-thumbnail-container">
+                  <img class="book-thumbnail-img" src="../images/opmanual_duckietown.png" alt="">
+                </div>
+              </a>
+
+              <div class="card-body">
+                <p class="card-text">
+                  Learn how to assemble and operate a Duckietown.
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-muted"></small>
+                  <div class="btn-group">
+                    <a href="opmanual-duckietown/book.pdf" role="button" class="btn btn-sm btn-outline-secondary">
+                      <i class="bi bi-file-earmark-pdf"></i>&nbsp; PDF
+                    </a>
+                    <a href="opmanual-duckietown/" role="button" class="btn btn-sm btn-html btn-outline-danger">
+                      <b><i class="bi bi-filetype-html"></i>&nbsp; HTML</b>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--
+          <div class="col" id="book-opmanual-autolab">
+              <div class="book opmanual-book card shadow rounded-3">
+                  <h5 class="card-header card-title d-flex align-items-center justify-content-center text-center">
+                      The Autolab manual
+                  </h5>
+
+                  <a href="opmanual-autolab/">
+                      <div class="book-thumbnail-container">
+                          <img class="book-thumbnail-img" src="../images/opmanual_autolab.png" alt="">
+                      </div>
+                  </a>
+
+                  <div class="card-body">
+                      <p class="card-text">
+                          Learn how to assemble and operate an Autolab.
+                      </p>
+                      <div class="d-flex justify-content-between align-items-center">
+                          <small class="text-muted"></small>
+                          <div class="btn-group">
+                              <a href="opmanual-autolab/book.pdf" role="button" class="btn btn-sm btn-outline-secondary">
+                                  <i class="bi bi-file-earmark-pdf"></i>&nbsp; PDF
+                              </a>
+                              <a href="opmanual-autolab/" role="button" class="btn btn-sm btn-html btn-outline-danger">
+                                  <b><i class="bi bi-filetype-html"></i>&nbsp; HTML</b>
+                              </a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          -->
+
+          <div class="col" id="book-opmanual-duckiedrone">
+            <div class="book opmanual-book card shadow rounded-3">
+              <h5 class="card-header card-title d-flex align-items-center justify-content-center text-center">
+                The Duckiedrone manual
+              </h5>
+
+              <a href="opmanual-duckiedrone/">
+                <div class="book-thumbnail-container">
+                  <img class="book-thumbnail-img" src="../images/opmanual_duckiedrone.png" alt="">
+                </div>
+              </a>
+
+              <div class="card-body">
+                <p class="card-text">
+                  Learn how to assemble and operate a Duckiedrone.
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-muted"></small>
+                  <div class="btn-group">
+                    <a href="opmanual-duckiedrone/book.pdf" role="button" class="btn btn-sm btn-outline-secondary">
+                      <i class="bi bi-file-earmark-pdf"></i>&nbsp; PDF
+                    </a>
+                    <a href="opmanual-duckiedrone/" role="button" class="btn btn-sm btn-html btn-outline-danger">
+                      <b><i class="bi bi-filetype-html"></i>&nbsp; HTML</b>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="books-divider"></div>
+
+
+  <div class="container px-4 py-5" id="developer-books">
+    <h2 class="pb-2 border-bottom">Developer manuals</h2>
+    These are the developer manuals, which contain instructions on how to develop with Duckietown.
+
+    <div class="album py-5 bg-light">
+      <div class="container">
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+
+          <div class="col" id="book-devmanual-docs">
+            <div class="book devmanual-book card shadow rounded-3">
+              <h5 class="card-header card-title d-flex align-items-center justify-content-center text-center">
+                The Book Writer manual
+              </h5>
+
+              <a href="devmanual-docs/">
+                <div class="book-thumbnail-container">
+                  <img class="book-thumbnail-img" src="../images/devmanual_docs.png" alt="">
+                </div>
+              </a>
+
+              <div class="card-body">
+                <p class="card-text">
+                  Learn how to contribute to this documentation.
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-muted"></small>
+                  <div class="btn-group">
+                    <a href="devmanual-docs/book.pdf" role="button" class="btn btn-sm btn-outline-secondary">
+                      <i class="bi bi-file-earmark-pdf"></i>&nbsp; PDF
+                    </a>
+                    <a href="devmanual-docs/" role="button" class="btn btn-sm btn-html btn-outline-danger">
+                      <b><i class="bi bi-filetype-html"></i>&nbsp; HTML</b>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--
+          <div class="col" id="book-devmanual-shell">
+              <div class="book devmanual-book card shadow rounded-3">
+                  <h5 class="card-header card-title d-flex align-items-center justify-content-center text-center">
+                      The Duckietown Shell manual
+                  </h5>
+
+                  <a href="devmanual-shell/">
+                      <div class="book-thumbnail-container">
+                          <img class="book-thumbnail-img" src="../images/devmanual_shell.png" alt="">
+                      </div>
+                  </a>
+
+                  <div class="card-body">
+                      <p class="card-text">
+                          Learn how to use and develop the Duckietown Shell.
+                      </p>
+                      <div class="d-flex justify-content-between align-items-center">
+                          <small class="text-muted"></small>
+                          <div class="btn-group">
+                              <a href="devmanual-shell/book.pdf" role="button" class="btn btn-sm btn-outline-secondary">
+                                  <i class="bi bi-file-earmark-pdf"></i>&nbsp; PDF
+                              </a>
+                              <a href="devmanual-shell/" role="button" class="btn btn-sm btn-html btn-outline-danger">
+                                  <b><i class="bi bi-filetype-html"></i>&nbsp; HTML</b>
+                              </a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          -->
+
+          <div class="col" id="book-devmanual-software">
+            <div class="book devmanual-book card shadow rounded-3">
+              <h5 class="card-header card-title d-flex align-items-center justify-content-center text-center">
+                The Developer manual
+              </h5>
+
+              <a href="devmanual-software/">
+                <div class="book-thumbnail-container">
+                  <img class="book-thumbnail-img" src="../images/devmanual_software.png" alt="">
+                </div>
+              </a>
+
+              <div class="card-body">
+                <p class="card-text">
+                  Learn how to develop new software in Duckietown.
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-muted"></small>
+                  <div class="btn-group">
+                    <a href="devmanual-software/book.pdf" role="button" class="btn btn-sm btn-outline-secondary">
+                      <i class="bi bi-file-earmark-pdf"></i>&nbsp; PDF
+                    </a>
+                    <a href="devmanual-software/" role="button" class="btn btn-sm btn-html btn-outline-danger">
+                      <b><i class="bi bi-filetype-html"></i>&nbsp; HTML</b>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col" id="book-devmanual-lx">
+            <div class="book devmanual-book card shadow rounded-3">
+              <h5 class="card-header card-title d-flex align-items-center justify-content-center text-center">
+                The Learning Experiences developer manual
+              </h5>
+
+              <a href="devmanual-lx/">
+                <div class="book-thumbnail-container">
+                  <img class="book-thumbnail-img" src="../images/devmanual_lx.png" alt="">
+                </div>
+              </a>
+
+              <div class="card-body">
+                <p class="card-text">
+                  Learn how to develop exciting new Learning Experiences.
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-muted"></small>
+                  <div class="btn-group">
+                    <a href="devmanual-lx/book.pdf" role="button" class="btn btn-sm btn-outline-secondary">
+                      <i class="bi bi-file-earmark-pdf"></i>&nbsp; PDF
+                    </a>
+                    <a href="devmanual-lx/" role="button" class="btn btn-sm btn-html btn-outline-danger">
+                      <b><i class="bi bi-filetype-html"></i>&nbsp; HTML</b>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="books-divider"></div>
+
+
+  <div class="container px-4 py-5" id="course-books">
+    <h2 class="pb-2 border-bottom">Learning with Duckietown</h2>
+    These books support graduate-level classes developed using Duckietown.
+
+    <div class="album py-5 bg-light">
+      <div class="container">
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+
+          <div class="col" id="book-course-intro-to-drones">
+            <div class="book course-book card shadow rounded-3">
+              <h5 class="card-header card-title d-flex align-items-center justify-content-center text-center">
+                Introduction to Robotics with Drones
+              </h5>
+
+              <a href="course-intro-to-drones/">
+                <div class="book-thumbnail-container">
+                  <img class="book-thumbnail-img" src="../images/course_intro_to_drones.png" alt="">
+                </div>
+              </a>
+
+              <div class="card-body">
+                <p class="card-text">
+                  Learn how to develop and fly an autonomous drone.
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-muted"></small>
+                  <div class="btn-group">
+                    <a href="course-intro-to-drones/book.pdf" role="button" class="btn btn-sm btn-outline-secondary">
+                      <i class="bi bi-file-earmark-pdf"></i>&nbsp; PDF
+                    </a>
+                    <a href="course-intro-to-drones/" role="button" class="btn btn-sm btn-html btn-outline-danger">
+                      <b><i class="bi bi-filetype-html"></i>&nbsp; HTML</b>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!--
+
+
+  <div class="books-divider"></div>
+
+
+  <div class="container px-4 py-5" id="research-books">
+      <h2 class="pb-2 border-bottom">Research with Duckietown</h2>
+      Research-level initiatives using Duckietown.
+
+      <div class="album py-5 bg-light">
+          <div class="container">
+
+              <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+
+                  <div class="col" id="book-research-aido">
+                      <div class="book research-book card shadow rounded-3">
+                          <h5 class="card-header card-title d-flex align-items-center justify-content-center text-center">
+                              The AI Driving Olympics
+                          </h5>
+
+                          <a href="research-aido/">
+                              <div class="book-thumbnail-container">
+                                  <img class="book-thumbnail-img" src="../images/research_aido.png" alt="">
+                              </div>
+                          </a>
+
+                          <div class="card-body">
+                              <p class="card-text">
+                                  How to participate in the AI Driving Olympics.
+                              </p>
+                              <div class="d-flex justify-content-between align-items-center">
+                                  <small class="text-muted"></small>
+                                  <div class="btn-group">
+                                      <a href="research-aido/book.pdf" role="button" class="btn btn-sm btn-outline-secondary">
+                                          <i class="bi bi-file-earmark-pdf"></i>&nbsp; PDF
+                                      </a>
+                                      <a href="research-aido/" role="button" class="btn btn-sm btn-html btn-outline-danger">
+                                          <b><i class="bi bi-filetype-html"></i>&nbsp; HTML</b>
+                                      </a>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+              </div>
+          </div>
+      </div>
+  </div>
+
+  -->
+
+  <div class="books-divider"></div>
+
+  <div class="container">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+      <a href="https://www.duckietown.com" class="col-md-6 d-flex mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+        <img src="../images/logo_white.jpeg" height="32" alt="">
+        &nbsp;
+        <p class="mb-0 text-muted">&copy; 2023 Duckietown, Inc</p>
+      </a>
+
+      <ul class="nav col-md-6 justify-content-end">
+        <li class="nav-item"><a href="https://docs-old.duckietown.org" class="nav-link px-2 text-muted">Old version</a></li>
+        <li class="nav-item"><a href="https://www.duckietown.com" class="nav-link px-2 text-muted">Website</a></li>
+      </ul>
+    </footer>
+  </div>
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" type="application/javascript"></script>
+
+<script src="../js/string.format.js" type="application/javascript"></script>
+<script src="../js/distros_list.js" type="application/javascript"></script>
+
+</body>
+</html>

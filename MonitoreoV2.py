@@ -141,7 +141,52 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
                 targetIP = entry[0].get()
         #print(targetIP)
         return targetIP
+    
+    def GetData(self, out_data):
+        while True:
+            data, addr = sock.recvfrom(4096)
+            testo = str(data.decode('utf-8'))
+            lista = testo.split(",")
+            texto = open(file_name, "a")
+            texto.write(testo+'\n')
+            texto.close()
+            
+            if lista[0] == 'L':
+                out_data[1].append(float(lista[5]))
+                if len(out_data[1]) > 200:
+                    out_data[1].pop(0)
 
+# ... (continúa con el resto de tu código)
+
+    def start_monitoring(self):
+        # Crear una nueva ventana para la animación
+        animation_window = tk.Toplevel(self)
+        animation_window.title("Monitoreo de Velocidad")
+        animation_window.geometry("800x600")  # Ajusta el tamaño según tus necesidades
+
+        # Agregar una etiqueta para la animación (opcional)
+        animation_label = tk.Label(animation_window, text="Velocidad:")
+        animation_label.pack(padx=10, pady=10)
+
+        # Configurar la gráfica para la animación
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        hl, = plt.plot([], [])
+        plt.ylim(0, 30)
+        plt.xlim(0, 200)
+
+        def update_line(num, hl, data):
+            hl.set_data(range(len(data[1])), data[1])
+            return hl,
+
+        line_ani = animation.FuncAnimation(fig, update_line, fargs=(hl, gData), interval=50, blit=False)
+
+        plt.show()
+
+        # Lanzar el hilo para la obtención de datos y la animación
+        data_collector = threading.Thread(target=self.GetData, args=(gData,))
+        data_collector.start()
+    #-----------------------
         
     def open_monitor_window(self):
         monitor_window = tk.Toplevel(self)
@@ -176,7 +221,15 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         sliderD = tk.Scale(monitor_window, from_=10, to=25, orient="horizontal")
         sliderD.bind("<ButtonRelease-1>", lambda event: self.updateValueD(sliderD.get(),self.getIP(letter_combobox.get())))
 
-        
+ 
+        # Agregar un botón para iniciar el monitoreo y la animación
+        start_monitor_button = tk.Button(monitor_window, text="Monitorear Señal", command=self.start_monitoring)
+        start_monitor_button.grid(row=4, column=1, padx=10, pady=10)
+
+        # ... (otros elementos de la GUI, como botones, sliders, etc.)
+
+
+
        
         '''----------------Posicionar elementos en la App--------------''' 
         # Posicionar los botones 
