@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import time as tm
 
 import socket
 
@@ -24,7 +25,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
 
 
 ##---------------------------------------------------------
-UDP_IP = "192.168.1.90" # ip del computador que recibe datos (mismo que el que corre este script)
+UDP_IP = "192.168.1.101" # ip del computador que recibe datos (mismo que el que corre este script)
 UDP_PORT = 1234
 
 #UDP
@@ -118,7 +119,8 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         MESSAGE = "E/parar/no"
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
         #print("message:", MESSAGE, "IP", self.ip_entry_widgets[0][0].get())
-        MESSAGE = "E/cv_ref/" + str(10)
+        tm.sleep(0.5)
+        MESSAGE = "E/cv_ref/" + str(7)
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
 
@@ -183,11 +185,10 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         plt.ylim(0, 30)
         plt.xlim(0, 200)
         
-        canvas = FigureCanvasTkAgg(fig, master=self)
-        canvas.get_tk_widget.grid(row=3, column=0, columnspan=3, padx=10, pady=10)
 
 
         line_ani = animation.FuncAnimation(fig, update_line, fargs=(hl, gData), interval=50, blit=False, cache_frame_data=False)
+        plt.show()
 
         # Iniciar la obtención de datos y la animación en un hilo
         data_collector = threading.Thread(target=self.GetData, args=(gData,))
@@ -246,7 +247,7 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         # Posicionar los botones 
         #calibrar_button_monitor.grid(row=4, column=0, padx=10, pady=10)
         iniciar_button_monitor.grid(row=len(self.ip_entry_widgets) + 8, column=1, padx=10, pady=10)
-        #stop_button_monitor.grid(row=len(self.ip_entry_widgets) + 4, column=1, padx=10, pady=10)
+        stop_button_monitor.grid(row=len(self.ip_entry_widgets) + 8, column=0, padx=10, pady=10)
         
         
         empty_label = tk.Label(self, text="")
