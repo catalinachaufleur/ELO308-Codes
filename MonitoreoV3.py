@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 import socket
 
@@ -58,7 +59,8 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         super().__init__()
 
         self.title("RÜPÜ Controller")
-        self.geometry("1000x800")  # Tamaño de la ventana principal
+        self.geometry("1500x1000")  # Tamaño de la ventana principal
+        #self.attributes('-fullscreen', True)
 
         self.num_label = tk.Label(self, text="Ingresa el número de Robots")
         self.num_label.grid(row=0, column=0, padx=5, pady=5)
@@ -115,7 +117,9 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
 
         MESSAGE = "E/parar/no"
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
-        print("message:", MESSAGE, "IP", self.ip_entry_widgets[0][0].get())
+        #print("message:", MESSAGE, "IP", self.ip_entry_widgets[0][0].get())
+        MESSAGE = "E/cv_ref/" + str(10)
+        sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
 
     def clickStopButton(self):
@@ -167,22 +171,25 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
                 if len(out_data[1]) > 200:
                     out_data[1].pop(0)
 
-# ... (continúa con el resto de tu código)
 
     def animate(self):
         def update_line(num, hl, data):
             hl.set_data(range(len(data[1])), data[1])
             return hl,
-
+        
         fig = plt.figure()
         ax = fig.add_subplot(111)
         hl, = plt.plot([], [])
         plt.ylim(0, 30)
         plt.xlim(0, 200)
+        
+        canvas = FigureCanvasTkAgg(fig, master=self)
+        canvas.get_tk_widget.grid(row=3, column=0, columnspan=3, padx=10, pady=10)
+
 
         line_ani = animation.FuncAnimation(fig, update_line, fargs=(hl, gData), interval=50, blit=False, cache_frame_data=False)
-        plt.show()
 
+        # Iniciar la obtención de datos y la animación en un hilo
         data_collector = threading.Thread(target=self.GetData, args=(gData,))
         data_collector.start()
 
@@ -192,12 +199,12 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
     #-----------------------
         
     def open_monitor_window(self):
-        if hasattr(self, 'monitor_window') and self.monitor_window.winfo_exists():
-            return
+        #if hasattr(self, 'monitor_window') and self.monitor_window.winfo_exists():
+        #    return
 
-        monitor_window = tk.Toplevel(self)
-        monitor_window.title("Monitor")
-        monitor_window.geometry("800x600")  # Tamaño de la ventana del monitor
+        #monitor_window = tk.Toplevel(self)
+        #monitor_window.title("Monitor")
+        #monitor_window.geometry("800x600")  # Tamaño de la ventana del monitor
 
 
         # Crear una lista de letras para las opciones de la lista desplegable
@@ -205,9 +212,9 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
 
         # Agregar una lista desplegable en la ventana de monitoreo
         selected_letter = tk.StringVar()
-        letter_combobox = ttk.Combobox(monitor_window, textvariable=selected_letter, values=letras)
+        letter_combobox = ttk.Combobox(self, textvariable=selected_letter, values=letras)
 
-        labelRobot = tk.Label(monitor_window, text="Escoja el robot(?)")
+        labelRobot = tk.Label(self, text="Escoja el robot(?)")
 
         #setar en el Lider
         letter_combobox.set(self.ip_entry_widgets[0][1].get())
@@ -215,42 +222,46 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
 
         #botones de monitoreo
         #calibrar_button_monitor = tk.Button(monitor_window, text="Calibrar", command=self.clickCalibrarButton)
-        iniciar_button_monitor = tk.Button(monitor_window, text="Iniciar", command=self.clickIniciarButton)
-        stop_button_monitor = tk.Button(monitor_window, text="Detener", command=self.clickStopButton)
+        iniciar_button_monitor = tk.Button(self, text="Iniciar", command=self.clickIniciarButton) #cambiar por sliderV.get()
+        stop_button_monitor = tk.Button(self, text="Detener", command=self.clickStopButton)
 
         # Posicionar los sliders y labels
-        labelV = tk.Label(monitor_window, text="Velocidad")
-        sliderV = tk.Scale(monitor_window, from_=10, to=30, orient="horizontal")
+        labelV = tk.Label(self, text="Velocidad")
+        sliderV = tk.Scale(self, from_=10, to=30, orient="horizontal")
         sliderV.bind("<ButtonRelease-1>", lambda event: self.updateValueV(sliderV.get(),self.getIP(letter_combobox.get())))
 
-        labelD = tk.Label(monitor_window, text="Distancia")
-        sliderD = tk.Scale(monitor_window, from_=10, to=25, orient="horizontal")
+        labelD = tk.Label(self, text="Distancia")
+        sliderD = tk.Scale(self, from_=10, to=25, orient="horizontal")
         sliderD.bind("<ButtonRelease-1>", lambda event: self.updateValueD(sliderD.get(),self.getIP(letter_combobox.get())))
 
  
         # Agregar un botón para iniciar el monitoreo y la animación
-        start_monitor_button = tk.Button(monitor_window, text="Monitorear Señal", command=self.start_monitoring)
-        start_monitor_button.grid(row=4, column=1, padx=10, pady=10)
-        # ... (otros elementos de la GUI, como botones, sliders, etc.)
+        start_monitor_button = tk.Button(self, text="Monitorear Señal", command=self.start_monitoring)
+        start_monitor_button.grid(row=len(self.ip_entry_widgets) + 8, column=2, padx=10, pady=10)
 
 
 
        
         '''----------------Posicionar elementos en la App--------------''' 
         # Posicionar los botones 
-        #calibrar_button_monitor.grid(row=0, column=0, padx=10, pady=10)
-        iniciar_button_monitor.grid(row=0, column=0, padx=10, pady=10)
-        stop_button_monitor.grid(row=0, column=1, padx=10, pady=10)
+        #calibrar_button_monitor.grid(row=4, column=0, padx=10, pady=10)
+        iniciar_button_monitor.grid(row=len(self.ip_entry_widgets) + 8, column=1, padx=10, pady=10)
+        #stop_button_monitor.grid(row=len(self.ip_entry_widgets) + 4, column=1, padx=10, pady=10)
         
-        labelRobot.grid(row=1, column=0, padx=10, pady=10) 
-        letter_combobox.grid(row=1, column=1, padx=10, pady=10)
+        
+        empty_label = tk.Label(self, text="")
+        empty_label.grid(row=len(self.ip_entry_widgets) + 3, columnspan=3)  # Ajusta la columna según tus necesidades
+
+        
+        labelRobot.grid(row=len(self.ip_entry_widgets) + 5, column=0, padx=10, pady=10) 
+        letter_combobox.grid(row=len(self.ip_entry_widgets) + 5, column=1, padx=10, pady=10)
 
         #Sliders
-        labelV.grid(row=2, column=0, columnspan=3, padx=10, pady=10)
-        sliderV.grid(row=2, column=2, padx=10, pady=10)
+        labelV.grid(row=len(self.ip_entry_widgets) + 6, column=0, columnspan=3, padx=10, pady=10)
+        sliderV.grid(row=len(self.ip_entry_widgets) + 6, column=2, padx=10, pady=10)
 
-        labelD.grid(row=3, column=0, columnspan=3, padx=10, pady=10)
-        sliderD.grid(row=3, column=2, padx=10, pady=10)
+        labelD.grid(row=len(self.ip_entry_widgets) + 7, column=0, columnspan=3, padx=10, pady=10)
+        sliderD.grid(row=len(self.ip_entry_widgets) + 7, column=2, padx=10, pady=10)
 
 app = Window()
 app.mainloop()
