@@ -56,13 +56,13 @@ double calculoPIDd(double y,double ref,double &error_ant,double &error_integral,
     }
     u=kp*error + kd*(error-error_ant)/(t_actual*0.001) + ki*error_integral;
     error_ant=error;
-    if(u > limite*1.2+1){
+    if(u > limite*1.1+1){
       //error_integral=limite;
-      return limite*1.2+1; 
+      return limite*1.1+1; 
     }
-    else if(u < limite*0.8-1){
+    else if(u < limite*0.9-1){
       //error_integral=-limite;
-      return limite*0.8-1;
+      return limite*0.9-1;
     }
     else{
       return u;
