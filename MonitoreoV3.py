@@ -24,7 +24,7 @@ UDP_PORT_TX = 0
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
 
 ##---------------------------------------------------------
-UDP_IP_RX = "192.168.137.31" # ip del computador que recibe datos (mismo que el que corre este script)
+UDP_IP_RX = "192.168.1.9" # ip del computador que recibe datos (mismo que el que corre este script)
 UDP_PORT_RX = 1234
 #----------------
 sock_RX = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -119,7 +119,7 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
 
             ip_entry = tk.Entry(self)
             ip_entry.grid(row=i + 3, column=1, padx=5, pady=5)
-            ip_entry.insert(tk.END,'192.168.1.')
+            ip_entry.insert(tk.END,'192.168.1')
 
             letter_label = tk.Label(self, text=f'Letra {i + 1}:')
             letter_label.grid(row=i + 3, column=2, padx=5, pady=5)
@@ -174,7 +174,7 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         
         MESSAGE = "E/cd_ref/" + str(value)
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
-        print("message:", MESSAGE, "IP:",IP)
+        print("message:", MESSAGE, "IP:", IP)
 
     
     def getIP(self,label):
@@ -186,7 +186,7 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         #print(targetIP)
         return targetIP
     
-    def GetData(self, out_data):
+    def GetData(self, out_data, dato):
         while True:
             data, addr = sock_RX.recvfrom(4096)
             testo = str(data.decode('utf-8'))
@@ -196,12 +196,12 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
             texto.close()
             
             if lista[0] == self.letter_combobox.get():
-                out_data[1].append(float(lista[5]))
+                out_data[1].append(float(lista[dato]))
                 if len(out_data[1]) > 200:
                     out_data[1].pop(0)
 
 
-    def animate(self):
+    def animate(self,dato):
         def update_line(num, hl, data):
             hl.set_data(range(len(data[1])), data[1])
             return hl,
@@ -218,11 +218,14 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         plt.show()
 
         # Iniciar la obtención de datos y la animación en un hilo
-        data_collector = threading.Thread(target=self.GetData, args=(gData,))
+        data_collector = threading.Thread(target=self.GetData, args=(gData, dato))
         data_collector.start()
 
-    def start_monitoring(self,):
-        self.animate()
+    def start_monitoring_vel(self,):
+        self.animate(5)
+        
+    def start_monitoring_dist(self,):
+        self.animate(2)#revisar
 
 
     #-----------------------
@@ -254,10 +257,10 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
 
  
         # Agregar un botón para iniciar el monitoreo y la animación
-        start_monitor_button = tk.Button(self, text="Monitorear Señal", command=self.start_monitoring)
+        start_monitor_button = tk.Button(self, text="Monitorear Velocidad", command=self.start_monitoring_vel)
         start_monitor_button.grid(row=len(self.ip_entry_widgets) + 8, column=2, padx=10, pady=10)
 
-        start_monitor_button = tk.Button(self, text="Monitorear Señal 2", command=self.start_monitoring)
+        start_monitor_button = tk.Button(self, text="Monitorear Distancia", command=self.start_monitoring_dist)
         start_monitor_button.grid(row=len(self.ip_entry_widgets) + 8, column=3, padx=10, pady=10)
 
 

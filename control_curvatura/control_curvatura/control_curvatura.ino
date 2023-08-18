@@ -165,6 +165,7 @@ void loop(){
  // Serial.println(estado);
   switch (estado) {
     case inicio:
+      udp_check();
       ciclo_de_inicio();
       break;
     case calibracion:

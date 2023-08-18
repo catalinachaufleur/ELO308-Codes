@@ -197,6 +197,16 @@ void udp_transm() {
   }
 }
 
+void udp_check() {
+ 
+  cadena = String(EtiquetaRobot) + "," + String(IP_sucesor) + "Encendido";
+  cadena.toCharArray(msg, cadena.length() + 1);
+  udp.beginPacket(IP_monitoreo, puerto_monitoreo);
+  udp.printf(msg);      //
+  udp.endPacket();
+
+}
+
 
 void udp_monitor() {
   //t_actual = millis() - t_monitoreo;
