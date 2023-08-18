@@ -25,12 +25,17 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
 
 
 ##---------------------------------------------------------
-UDP_IP = "192.168.137.1" # ip del computador que recibe datos (mismo que el que corre este script)
-UDP_PORT = 1234
+hostname=socket.gethostname()
+IPAddr=socket.gethostbyname(hostname)
+#print("Your Computer Name is:"+hostname)
+#print("Your Computer IP Address is:"+IPAddr)
+
+UDP_IP_RX = IPAddr # ip del computador que recibe datos (mismo que el que corre este script)
+UDP_PORT_RX = 1234
 
 #UDP
 sock_RX = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock_RX.bind((UDP_IP, UDP_PORT))
+sock_RX.bind((UDP_IP_RX, UDP_PORT_RX))
 #---------------------------------------------------------
 file_name = "monitoreo.csv"  # archivo csv
 texto = open(file_name,'w')
@@ -76,7 +81,7 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         self.submit_button.grid(row=0, column=2, padx=5, pady=5)
 
         self.calibrar_button = tk.Button(self, text="Calibrar", command=self.clickCalibrarButton)
-        self.monitor_button = tk.Button(self, text="Monitorear", command=self.open_monitor_window)
+        self.monitor_button = tk.Button(self, text="Controlar", command=self.open_monitor_window)
 
         self.ip_entry_widgets = []  # Lista para mantener las casillas de texto de IPs y letras
 
@@ -96,7 +101,7 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
 
             ip_entry = tk.Entry(self)
             ip_entry.grid(row=i + 3, column=1, padx=5, pady=5)
-            ip_entry.insert(tk.END,'192.168.1.')
+            ip_entry.insert(tk.END,'192.168.1.1')
 
             letter_label = tk.Label(self, text=f'Letra {i + 1}:')
             letter_label.grid(row=i + 3, column=2, padx=5, pady=5)
@@ -109,16 +114,17 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
             self.ip_entry_widgets.append((ip_entry, letter_entry))# [(ip1,letra1),(ip2,letra2),...]
 
     def clickCalibrarButton(self):
-        for i in range(len(self.ip_entry_widgets)):
+         for i in reversed(range(len(self.ip_entry_widgets))):
             UDP_IP_TX = self.ip_entry_widgets[i][0].get()
             UDP_PORT_TX = 1111
             MESSAGE = "E/calibrar/1"
             sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
             print("message:", MESSAGE, "IP:", UDP_IP_TX)
+            tm.sleep(0.2)
 
             
     def clickIniciarButton(self):
-        UDP_IP_TX = self.ip_entry_widgets[0][0].get()
+        UDP_IP_TX = "192.168.1.100"
         UDP_PORT_TX = 1111
 
         MESSAGE = "E/parar/no"
@@ -169,6 +175,7 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
             data, addr = sock_RX.recvfrom(4096)
             testo = str(data.decode('utf-8'))
             lista = testo.split(",")
+            print(lista)
             texto = open(file_name, "a")
             texto.write(testo+'\n')
             texto.close()

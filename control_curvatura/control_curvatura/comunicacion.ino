@@ -199,7 +199,8 @@ void udp_transm() {
 
 void udp_check() {
  
-  cadena = String(EtiquetaRobot) + "," + String(IP_sucesor) + "Encendido";
+  cadena = String(EtiquetaRobot) + "," + String(IP_sucesor) + ": Encendido";
+//Serial.println(cadena);
   cadena.toCharArray(msg, cadena.length() + 1);
   udp.beginPacket(IP_monitoreo, puerto_monitoreo);
   udp.printf(msg);      //

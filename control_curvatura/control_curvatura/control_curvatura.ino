@@ -13,9 +13,9 @@
 #define ssid "fvp"    //laboratorioUSM
 #define password "nomeacuerdo"
 
-#define IP_monitoreo "192.168.137.1"     //ip del dispositivo que va a supervisar los datos (ip desktop Carlos)
+#define IP_monitoreo "192.168.1.101"     //ip del dispositivo que va a supervisar los datos (ip desktop Carlos)
 #define puerto_monitoreo 1234           //puerto de envio UDP monitoreo
-#define IP_sucesor "192.168.137.188"   //ip del robot sucesor
+#define IP_sucesor "192.168.1.103"   //ip del robot sucesor
 #define puerto_sucesor 1111          //puerto del robot sucesor
 #define puerto_local 1111               //puerto local
 ////////
@@ -161,11 +161,11 @@ void setup()
 }
 
 void loop(){
- // Serial.print("ESTADO   :");
- // Serial.println(estado);
+  //Serial.print("ESTADO   :");
+  //Serial.println(estado);
   switch (estado) {
     case inicio:
-      udp_check();
+      //udp_check();
       ciclo_de_inicio();
       break;
     case calibracion:

@@ -35,6 +35,7 @@ double calculoPID(double y,double ref,double &error_ant,double &error_integral,d
 }
 
 double calculoPIDd(double y,double ref,double &error_ant,double &error_integral,double kp,double ki,double kd,double limite, String MODO, double &out_manual, String direccion){
+  int satMax = 0.5;
   if(MODO=="MANUAL"){
     return out_manual;
   }
@@ -56,13 +57,13 @@ double calculoPIDd(double y,double ref,double &error_ant,double &error_integral,
     }
     u=kp*error + kd*(error-error_ant)/(t_actual*0.001) + ki*error_integral;
     error_ant=error;
-    if(u > limite*1.1+1){
+    if(u > limite*(1+satMax)+1){
       //error_integral=limite;
-      return limite*1.1+1; 
+      return limite*(1+satMax)+1; 
     }
-    else if(u < limite*0.9-1){
+    else if(u < limite*(1-satMax)-1){
       //error_integral=-limite;
-      return limite*0.9-1;
+      return limite*(1-satMax)-1;
     }
     else{
       return u;

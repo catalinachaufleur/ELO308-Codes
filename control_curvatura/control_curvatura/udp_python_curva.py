@@ -11,9 +11,9 @@ import sys
 import csv
 import socket
 #Ajustables
-file_name = "C:\\Users\\Carlos\\Documents\\UTFSM\\autitos\\software\\plataforma_movil\\codigos_actualizados\\robot_final\\cooperativo\\control_curvatura\\monitoreo.csv"  # archivo csv
+file_name = "monitoreo.csv"  # archivo csv
 
-UDP_IP = "192.168.1.103" # ip del computador que recibe datos (mismo que el que corre este script)
+UDP_IP = "192.168.137.1" # ip del computador que recibe datos (mismo que el que corre este script)
 UDP_PORT = 1234
 #UDP
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

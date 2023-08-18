@@ -1,0 +1,6 @@
+Velocidades 10 y luego 20
+1 vuelta cada una
+
+falta:
+medir referencia de distancia
+distancia cte al iniciar la prueba

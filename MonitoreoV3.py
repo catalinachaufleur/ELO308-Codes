@@ -24,11 +24,18 @@ UDP_PORT_TX = 0
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
 
 ##---------------------------------------------------------
-UDP_IP_RX = "192.168.1.9" # ip del computador que recibe datos (mismo que el que corre este script)
+hostname=socket.gethostname()
+IPAddr=socket.gethostbyname(hostname)
+#print("Your Computer Name is:"+hostname)
+#print("Your Computer IP Address is:"+IPAddr)
+
+UDP_IP_RX = IPAddr # ip del computador que recibe datos (mismo que el que corre este script)
 UDP_PORT_RX = 1234
-#----------------
+
 sock_RX = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock_RX.bind((UDP_IP_RX, UDP_PORT_TX))
+#----------------
+
 
 file_name = "monitoreo.csv"  # archivo csv
 texto = open(file_name,'w')
@@ -48,7 +55,6 @@ ax = fig.add_subplot(111)
 hl, = plt.plot(gData[0], gData[1])
 plt.ylim(0, 30)
 plt.xlim(0,200)
-letras_sugeridas =["L","S","T","U","V"] #Agregar acá más letras si es que faltan
 
 
 #------------------------------------
@@ -61,13 +67,13 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         self.geometry("1500x1000")  # Tamaño de la ventana principal
         #self.attributes('-fullscreen', True)
 
-            
+        self.letras_sugeridas =["L","S","T"]            
         self.monitor_ip_label = tk.Label(self, text= "IP de este computador:")
         self.monitor_ip_label.grid(row=0, column=0, padx=5, pady=5)
         
         self.monitor_ip_entry = tk.Entry(self)
         self.monitor_ip_entry.grid(row=0, column=1, padx=5, pady=5)
-        self.monitor_ip_entry.insert(tk.END,'10.2.51.83')
+        self.monitor_ip_entry.insert(tk.END,IPAddr)
 
        # self.submit_ip_button = tk.Button(self, text="Ok", command=self.monitor_ip(UDP_IP_RX,self.monitor_ip_entry.get()))
        # self.submit_ip_button.grid(row=0, column=2, padx=5, pady=5)
@@ -113,30 +119,34 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         self.create_widgets()# Mostrar los botones despues de ok
 
     def create_ip_entry_widgets(self, n):
+        sugerido=len(self.letras_sugeridas)
+        for i in range(n-sugerido):
+            self.letras_sugeridas.append("")
         for i in range(n):
             ip_label = tk.Label(self, text=f'IP {i + 1}:')
             ip_label.grid(row=i + 3, column=0, padx=5, pady=5)
 
             ip_entry = tk.Entry(self)
             ip_entry.grid(row=i + 3, column=1, padx=5, pady=5)
-            ip_entry.insert(tk.END,'192.168.1')
+            ip_entry.insert(tk.END,'192.168.1.1')
 
             letter_label = tk.Label(self, text=f'Letra {i + 1}:')
             letter_label.grid(row=i + 3, column=2, padx=5, pady=5)
             
             letter_entry = tk.Entry(self)
             letter_entry.grid(row=i + 3, column=3, padx=5, pady=5)
-            letter_entry.insert(tk.END,letras_sugeridas[i])
+            letter_entry.insert(tk.END,self.letras_sugeridas[i])
 
             self.ip_entry_widgets.append((ip_entry, letter_entry))# [(ip1,letra1),(ip2,letra2),...]
 
     def clickCalibrarButton(self):
-        for i in range(len(self.ip_entry_widgets)):
+        for i in reversed(range(len(self.ip_entry_widgets))):
             UDP_IP_TX = self.ip_entry_widgets[i][0].get()
             UDP_PORT_TX = 1111
             MESSAGE = "E/calibrar/1"
             sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
             print("message:", MESSAGE, "IP:", UDP_IP_TX)
+            tm.sleep(0.2)
 
             
     def clickIniciarButton(self):
@@ -147,7 +157,7 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
         print("message:", MESSAGE, "IP", self.ip_entry_widgets[0][0].get())
         tm.sleep(0.5)
-        MESSAGE = "E/cv_ref/" + str(5) #str(7)
+        MESSAGE = "E/cv_ref/" + str(8) #str(7)
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
 
@@ -187,13 +197,21 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         return targetIP
     
     def GetData(self, out_data, dato):
+        #Bind Socket monitooooor
+        #UDP_IP_RX=self.monitor_ip_entry.get()
+        #print(UDP_IP_RX)
+       
+
         while True:
             data, addr = sock_RX.recvfrom(4096)
+            print(data)
             testo = str(data.decode('utf-8'))
             lista = testo.split(",")
             texto = open(file_name, "a")
             texto.write(testo+'\n')
             texto.close()
+
+            print(dato)
             
             if lista[0] == self.letter_combobox.get():
                 out_data[1].append(float(lista[dato]))
@@ -216,7 +234,7 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
 
         line_ani = animation.FuncAnimation(fig, update_line, fargs=(hl, gData), interval=50, blit=False, cache_frame_data=False)
         plt.show()
-
+        print("animate")
         # Iniciar la obtención de datos y la animación en un hilo
         data_collector = threading.Thread(target=self.GetData, args=(gData, dato))
         data_collector.start()
@@ -244,12 +262,12 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
 
         # Posicionar los sliders y labels
         labelV = tk.Label(self, text="Velocidad")
-        sliderV = tk.Scale(self, from_=5, to=30, orient="horizontal")
-        sliderV.bind("<ButtonRelease-1>", lambda event: self.updateValueV(sliderV.get(),self.getIP(letter_combobox.get())))
+        sliderV = tk.Scale(self, from_=7, to=30, orient="horizontal")
+        sliderV.bind("<ButtonRelease-1>", lambda event: self.updateValueV(sliderV.get(),self.getIP(self.letter_combobox.get())))
 
         labelD = tk.Label(self, text="Distancia")
         sliderD = tk.Scale(self, from_=7, to=25, orient="horizontal")
-        sliderD.bind("<ButtonRelease-1>", lambda event: self.updateValueD(sliderD.get(),self.getIP(letter_combobox.get())))
+        sliderD.bind("<ButtonRelease-1>", lambda event: self.updateValueD(sliderD.get(),self.getIP(self.letter_combobox.get())))
 
         #calibrar_button_monitor = tk.Button(monitor_window, text="Calibrar", command=self.clickCalibrarButton)
         iniciar_button_monitor = tk.Button(self, text="Iniciar", command=self.clickIniciarButton) #cambiar por sliderV.get()
@@ -263,8 +281,7 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         start_monitor_button = tk.Button(self, text="Monitorear Distancia", command=self.start_monitoring_dist)
         start_monitor_button.grid(row=len(self.ip_entry_widgets) + 8, column=3, padx=10, pady=10)
 
-
-       
+        
         '''----------------Posicionar elementos en la App--------------''' 
         # Posicionar los botones 
         #calibrar_button_monitor.grid(row=4, column=0, padx=10, pady=10)
