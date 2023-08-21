@@ -44,7 +44,7 @@ hl, = plt.plot(gData[0], gData[1])
 plt.ylim(0, 30)
 plt.xlim(0,200)
 
-def GetData(out_data):
+def GetData(out_data,señal):
     while True:
         data, addr = sock.recvfrom(4096) # buffer size is 1024 byte
         testo = str(data.decode('utf-8'))
@@ -54,7 +54,7 @@ def GetData(out_data):
         texto.close()
         #print(testo)
         column = 0
-        print (lista[0],lista[5])
+        print (lista[0],lista[señal])
         if lista[0]=='L':
             out_data[1].append( float(lista[5]) )
             i=0
@@ -74,9 +74,9 @@ line_ani = animation.FuncAnimation(fig, update_line, fargs=(hl, gData),
     interval=50, blit=False)
 
 # Configuramos y lanzamos el hilo encargado de leer datos del serial
-dataCollector = threading.Thread(target = GetData, args=(gData,))
+dataCollector = threading.Thread(target = GetData, args=(gData,5,))
 dataCollector.start()
 plt.show()
 
-dataCollector.join()
+#dataCollector.join()
             

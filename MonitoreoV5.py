@@ -4,7 +4,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import time as tm
 
 import socket
-
+import queue
 ##-------------------------
 
 import matplotlib.pyplot as plt #descargar
@@ -50,9 +50,9 @@ max_v = 30
 min_d = 10
 max_d = 20
 
-gData1 = [[0], [0]]
-gData2 = [[0], [0]]
-gData3 = [[0], [0]]
+data_queue1 = queue.Queue(maxsize=200)  # Puedes ajustar el tamaño máximo
+data_queue2 = queue.Queue(maxsize=200)
+data_queue3 = queue.Queue(maxsize=200)
 #------------------------------------
 
 class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
@@ -214,9 +214,9 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
             figure.suptitle("Señal robot " + self.letter_combobox.get(), fontsize=16)
             
             if lista[0] == self.letter_combobox.get():
-                out_data[1].append(float(lista[dato]))
-                if len(out_data[1]) > 100:
-                    out_data[1].pop(0)
+                out_data.put(float(lista[dato])) #data_queue1.put(float(lista[5]))
+                if out_data.qsize() > 200:
+                    out_data.get()
 
 
     def animate_vel(self):
@@ -232,15 +232,15 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
             lines.append(line)
 
         axes[0].set_title('Velocidad', fontsize=12)
-        axes[0].set_xlim(0, 100)
+        axes[0].set_xlim(0, 200)
         axes[0].set_ylim(0, 30)
 
         axes[1].set_title('Distancia Predecesor', fontsize=12)
-        axes[1].set_xlim(0, 100)
+        axes[1].set_xlim(0, 200)
         axes[1].set_ylim(0, 20)
 
         axes[2].set_title('Ángulo de inclinación', fontsize=12)
-        axes[2].set_xlim(0, 100)
+        axes[2].set_xlim(0, 200)
         axes[2].set_ylim(-1, 1)
         
         """
@@ -250,16 +250,21 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         """
         
 
-        def update_line(num, lines, data):
-            for line, d in zip(lines, data):
-                line.set_data(range(len(d[1])), d[1])
+        def update_line(num, lines, data_queues):
+            #Obtener los datos más recientes de las colas
+            data1 = list(data_queues[0].queue)
+            data2 = list(data_queues[1].queue)
+            data3 = list(data_queues[2].queue)
+
+            for line, d in zip(lines, [data1, data2, data3]):
+                line.set_data(range(len(d)), d)
             return lines
        
-        line_ani = animation.FuncAnimation(fig, update_line, fargs=(lines, [gData1, gData2, gData3]),interval=50, blit=True, cache_frame_data=False)
+        line_ani = animation.FuncAnimation(fig, update_line, fargs=(lines, [data_queue1, data_queue2, data_queue3]),interval=50, blit=True, cache_frame_data=False)
 
-        dataCollector1 = threading.Thread(target=self.GetData, args=(gData1, 5,fig))
-        dataCollector2 = threading.Thread(target=self.GetData, args=(gData2, 2,fig))
-        dataCollector3 = threading.Thread(target=self.GetData, args=(gData3, 6,fig))
+        dataCollector1 = threading.Thread(target=self.GetData, args=(data_queue1, 5,fig))
+        dataCollector2 = threading.Thread(target=self.GetData, args=(data_queue2, 2,fig))
+        dataCollector3 = threading.Thread(target=self.GetData, args=(data_queue3, 6,fig))
 
         dataCollector1.start()
         dataCollector2.start()

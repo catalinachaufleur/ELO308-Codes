@@ -1,3 +1,5 @@
+#https://github.com/TomSchimansky/CustomTkinter/blob/master/Readme.md
+
 import tkinter as tk
 from tkinter import ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
