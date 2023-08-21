@@ -35,8 +35,6 @@ UDP_PORT_RX = 1234
 sock_RX = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock_RX.bind((UDP_IP_RX, UDP_PORT_TX))
 #----------------
-
-
 file_name = "monitoreo.csv"  # archivo csv
 texto = open(file_name,'w')
 #estado = "T,"+String(Input_d)+","+String(d_ref)+","+String(vel_ref)+","+String(Input_vel)+","+String(Input_theta)+","+String(Output_d)+","+String(Output_vel)+","+String(Output_theta);
@@ -110,8 +108,8 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
 #-----------------------------------------
     
     def create_widgets(self):
-        self.calibrar_button.grid(row=len(self.ip_entry_widgets) + 3, column=1, padx=5, pady=5)
-        self.monitor_button.grid(row=len(self.ip_entry_widgets) + 3, column=2, padx=5, pady=5)
+        self.calibrar_button.grid(row=len(self.ip_entry_widgets) + 4, column=1, padx=5, pady=5)
+        self.monitor_button.grid(row=len(self.ip_entry_widgets) + 4, column=2, padx=5, pady=5)
 
     def create_ip_entries(self):
         num_entries = int(self.entry_num.get())  
@@ -196,30 +194,25 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         #print(targetIP)
         return targetIP
     
-    def GetData(self, out_data, dato):
-        #Bind Socket monitooooor
-        #UDP_IP_RX=self.monitor_ip_entry.get()
-        #print(UDP_IP_RX)
-       
-
+    def GetData(self, out_data):
         while True:
             data, addr = sock_RX.recvfrom(4096)
-            print(data)
             testo = str(data.decode('utf-8'))
             lista = testo.split(",")
+            print(lista)
             texto = open(file_name, "a")
             texto.write(testo+'\n')
             texto.close()
 
-            print(dato)
+           
             
-            if lista[0] == self.letter_combobox.get():
-                out_data[1].append(float(lista[dato]))
+            if lista[0] == 'L':
+                out_data[1].append(float(lista[5]))
                 if len(out_data[1]) > 200:
                     out_data[1].pop(0)
 
 
-    def animate(self,dato):
+    def animate(self):
         def update_line(num, hl, data):
             hl.set_data(range(len(data[1])), data[1])
             return hl,
@@ -234,16 +227,14 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
 
         line_ani = animation.FuncAnimation(fig, update_line, fargs=(hl, gData), interval=50, blit=False, cache_frame_data=False)
         plt.show()
-        print("animate")
+ 
         # Iniciar la obtención de datos y la animación en un hilo
-        data_collector = threading.Thread(target=self.GetData, args=(gData, dato))
+        data_collector = threading.Thread(target=self.GetData, args=(gData,))
         data_collector.start()
 
-    def start_monitoring_vel(self,):
-        self.animate(5)
+    def start_monitoring(self):
+        self.animate()
         
-    def start_monitoring_dist(self,):
-        self.animate(2)#revisar
 
 
     #-----------------------
@@ -258,7 +249,7 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
 
         self.letras = [entry[1].get() for entry in self.ip_entry_widgets]
         self.letter_combobox = ttk.Combobox(self, textvariable=self.selected_letter, values=self.letras)
-        #botones de monitoreo
+
 
         # Posicionar los sliders y labels
         labelV = tk.Label(self, text="Velocidad")
@@ -275,11 +266,11 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
 
  
         # Agregar un botón para iniciar el monitoreo y la animación
-        start_monitor_button = tk.Button(self, text="Monitorear Velocidad", command=self.start_monitoring_vel)
+        start_monitor_button = tk.Button(self, text="Monitorear Velocidad", command=self.start_monitoring)
         start_monitor_button.grid(row=len(self.ip_entry_widgets) + 8, column=2, padx=10, pady=10)
 
-        start_monitor_button = tk.Button(self, text="Monitorear Distancia", command=self.start_monitoring_dist)
-        start_monitor_button.grid(row=len(self.ip_entry_widgets) + 8, column=3, padx=10, pady=10)
+        #start_monitor_button = tk.Button(self, text="Monitorear Distancia", command=self.start_monitoring_dist)
+        #start_monitor_button.grid(row=len(self.ip_entry_widgets) + 8, column=3, padx=10, pady=10)
 
         
         '''----------------Posicionar elementos en la App--------------''' 
@@ -290,7 +281,7 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         
         
         empty_label = tk.Label(self, text="")
-        empty_label.grid(row=len(self.ip_entry_widgets) + 3, columnspan=3)  # Ajusta la columna según tus necesidades
+        empty_label.grid(row=len(self.ip_entry_widgets) + 3, columnspan=3)  
 
         
         self.labelRobot.grid(row=len(self.ip_entry_widgets) + 5, column=0, padx=10, pady=10) 

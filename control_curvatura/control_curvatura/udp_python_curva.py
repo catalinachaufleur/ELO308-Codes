@@ -13,7 +13,7 @@ import socket
 #Ajustables
 file_name = "monitoreo.csv"  # archivo csv
 
-UDP_IP = "192.168.137.1" # ip del computador que recibe datos (mismo que el que corre este script)
+UDP_IP = "192.168.1.101" # ip del computador que recibe datos (mismo que el que corre este script)
 UDP_PORT = 1234
 #UDP
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
