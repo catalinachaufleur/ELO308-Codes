@@ -1,5 +1,3 @@
-#https://github.com/TomSchimansky/CustomTkinter/blob/master/Readme.md
-
 import tkinter as tk
 import customtkinter
 
@@ -10,7 +8,6 @@ import time as tm
 import socket
 
 ##-------------------------
-
 import matplotlib.pyplot as plt #descargar
 import matplotlib.animation as animation
 import threading 
@@ -20,7 +17,6 @@ import paho.mqtt.client as mqtt #descargar
 import pymysql #descargar
 import csv
 
-####---------------------
 UDP_IP_TX =""
 UDP_PORT_TX = 0
 
@@ -29,8 +25,6 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
 ##---------------------------------------------------------
 hostname=socket.gethostname()
 IPAddr=socket.gethostbyname(hostname)
-#print("Your Computer Name is:"+hostname)
-#print("Your Computer IP Address is:"+IPAddr)
 
 UDP_IP_RX = IPAddr # ip del computador que recibe datos (mismo que el que corre este script)
 UDP_PORT_RX = 1234
@@ -38,15 +32,14 @@ UDP_PORT_RX = 1234
 #UDP
 sock_RX = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock_RX.bind((UDP_IP_RX, UDP_PORT_RX))
+
 #---------------------------------------------------------
 file_name = "monitoreo.csv"  # archivo csv
 texto = open(file_name,'w')
 #estado = "T,"+String(Input_d)+","+String(d_ref)+","+String(vel_ref)+","+String(Input_vel)+","+String(Input_theta)+","+String(Output_d)+","+String(Output_vel)+","+String(Output_theta);
  
 texto.write('Robot,Delta_muestra,Input_d,d_ref,vel_ref,Input_vel,Input_theta,Output_d,Output_vel,Output_theta'+'\n')
-
 texto.close()
-j=0
 
 min_v = 8
 max_v = 30
@@ -57,90 +50,106 @@ max_d = 20
 gData1 = [[0], [0]]
 gData2 = [[0], [0]]
 gData3 = [[0], [0]]
-#------------------------------------
 
-class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
+
+
+class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
-
+        
+        
         self.title("RÜPÜ Controller")
-        self.geometry("800x800+0+0")  # Tamaño de la ventana principal
-        #self.attributes('-fullscreen', True)
-
-
-        self.letras_sugeridas =["L","S","T"]  
-
-        #IP Monitor          
-        self.monitor_ip_label = tk.Label(self, text= "IP de este computador:")
+        self.geometry("700x800+0+0") 
+        
+        self.letras_sugeridas =["L","S","T"]
+        
+        #Ingresar IP Monitor          
+        self.monitor_ip_label = customtkinter.CTkLabel(self, text= "IP Monitor:", fg_color="transparent")
         self.monitor_ip_label.grid(row=0, column=0, padx=5, pady=5)
         
-        self.monitor_ip_entry = tk.Entry(self)
+        self.monitor_ip_entry = customtkinter.CTkEntry(self)
         self.monitor_ip_entry.grid(row=0, column=1, padx=5, pady=5)
-        self.monitor_ip_entry.insert(tk.END,IPAddr)
-
-        #Número de Robots        
-        self.num_label = tk.Label(self, text="Ingresa el número de Robots")
+        self.monitor_ip_entry.insert(customtkinter.END,IPAddr)
+ 
+        #Ingresar Número de Robots
+        self.num_label = customtkinter.CTkLabel(self, text="Número de robots")
         self.num_label.grid(row=1, column=0, padx=5, pady=5)
-
-        self.entry_num = ttk.Combobox(self, values=list(range(1, 11)))
+        
+        self.entry_num = customtkinter.CTkComboBox(self, values=["1", "2","3","4","5","6","7","8","9","10"])
         self.entry_num.grid(row=1, column=1, padx=5, pady=5)
         self.entry_num.set("1") 
-
-        self.submit_button = tk.Button(self, text="Ok", command=self.create_ip_entries)
+        
+        #Botón Ok (Ingresa IP y número de robots)
+        self.submit_button = customtkinter.CTkButton(self, text="Ok", command=self.create_ip_entries)
         self.submit_button.grid(row=1, column=2, padx=5, pady=5)
+        
+        #Lista que guarda IP y Label ingresada
+        self.ip_entry_widgets = []
+                
+        #Botones Calibrar y Controlar
+        self.calibrar_button = customtkinter.CTkButton(self, width = 80,text="Calibrar", command=self.clickCalibrarButton)
+        self.controlar_button = customtkinter.CTkButton(self, width = 80,text="Controlar", command=self.controllView)
 
-        self.calibrar_button = tk.Button(self, text="Calibrar", command=self.clickCalibrarButton)
-        self.monitor_button = tk.Button(self, text="Controlar", command=self.open_monitor_window)
-
-        self.ip_entry_widgets = []  # Lista para mantener las casillas de texto de IPs y letras
-
-        #crear lista de letras desplegable #VOY ACAAAAAAAA---------
-        self.letras = []
+        #crear lista de letras desplegable
+        self.letras_lista = []
 
         # Agregar una lista desplegable en la ventana de monitoreo
-        self.selected_letter = tk.StringVar()
-        self.letter_combobox = ttk.Combobox(self, textvariable=self.selected_letter, values=self.letras)
+        self.selected_letter = customtkinter.StringVar()
+        self.letter_combobox = customtkinter.CTkComboBox(self, values=self.letras_lista,variable=self.selected_letter )
 
-        self.labelRobot = tk.Label(self, text="Robot:")
-        #setar en el Lider
+        self.labelRobot = customtkinter.CTkLabel(self, text="Etiqueta robot:")
         self.letter_combobox.set("L")
-
-# Funciones ------------------------------------------
+        
+        
+    #Función Cierre App
+    def on_closing(self):
+        if len(self.ip_entry_widgets)>0:
+            self.clickStopButton()
+        self.destroy()
     
-    def create_widgets(self):
-        self.calibrar_button.grid(row=len(self.ip_entry_widgets) + 4, column=1, padx=5, pady=5)
-        self.monitor_button.grid(row=len(self.ip_entry_widgets) + 4, column=2, padx=5, pady=5)
-
+    #Crea y guarda las entradas de IP y Label
     def create_ip_entries(self):
-        num_entries = int(self.entry_num.get())  
-        self.create_ip_entry_widgets(num_entries)
-        self.create_widgets()# Mostrar los botones despues de ok
-
-    def create_ip_entry_widgets(self, n):
-        #Se incluyen las letras sugeridas en las casillas
+        #espacio vacío
+        #label_vacia = customtkinter.CTkLabel(app, text="", fg_color="transparent")
+        #label_vacia.grid(row=2, column=1, padx=5, pady=5)
+        
+        num_entries = int(self.entry_num.get())          
         sugerido=len(self.letras_sugeridas)
-        for i in range(n-sugerido):
+        for i in range(num_entries-sugerido):
             self.letras_sugeridas.append("")
 
-        for i in range(n):
-            ip_label = tk.Label(self, text=f'IP {i + 1}:')
+        for i in range(num_entries):
+            ip_label = customtkinter.CTkLabel(self, text=f'IP {i + 1}:')
             ip_label.grid(row=i + 3, column=0, padx=5, pady=5)
 
-            ip_entry = tk.Entry(self)
+            ip_entry =  customtkinter.CTkEntry(self)
             ip_entry.grid(row=i + 3, column=1, padx=5, pady=5)
             ip_entry.insert(tk.END,'192.168.1.1')
 
-            letter_label = tk.Label(self, text=f'Letra {i + 1}:')
-            letter_label.grid(row=i + 3, column=2, padx=5, pady=5)
+            #letter_label = customtkinter.CTkLabel(self, text=f'Etiqueta {i + 1}:')
+            #letter_label.grid(row=i + 3, column=2, padx=5, pady=5)
             
-            letter_entry = tk.Entry(self)
-            letter_entry.grid(row=i + 3, column=3, padx=5, pady=5)
+            letter_entry = customtkinter.CTkEntry(self)
+            letter_entry.grid(row=i + 3, column=2, padx=5, pady=5)
             letter_entry.insert(tk.END,self.letras_sugeridas[i])
 
-
+            label_vacia = customtkinter.CTkLabel(app, text="", fg_color="transparent")
+            label_vacia.grid(row=len(self.ip_entry_widgets) + 4, column=1, padx=5, pady=5)
+      
+    
             self.ip_entry_widgets.append((ip_entry, letter_entry))# [(ip1,letra1),(ip2,letra2),...]
+            
+            self.create_widgets()
+            
+            
+    #Posiciona botones Calibrar y Controlar
+    def create_widgets(self):
+          
+        self.calibrar_button.grid(row=len(self.ip_entry_widgets) + 5, column=1, padx=5, pady=5)
+        self.controlar_button.grid(row=len(self.ip_entry_widgets) + 5, column=2, padx=5, pady=5)    
 
+    #Función botón Calibrar
     def clickCalibrarButton(self):
          for i in reversed(range(len(self.ip_entry_widgets))):
             UDP_IP_TX = self.ip_entry_widgets[i][0].get()
@@ -149,8 +158,8 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
             sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
             #print("message:", MESSAGE, "IP:", UDP_IP_TX)
             tm.sleep(0.2)
-
             
+    #Función Iniciar  
     def clickIniciarButton(self):
         UDP_IP_TX = self.ip_entry_widgets[0][0].get()
         UDP_PORT_TX = 1111
@@ -168,8 +177,7 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
             print(MESSAGE, UDP_IP_TX)
             sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
-
-
+    # Función botón detener
     def clickStopButton(self):
         UDP_IP_TX = self.ip_entry_widgets[0][0].get()
         UDP_PORT_TX = 1111
@@ -180,29 +188,35 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
 
 
     def updateValueV(self, value,IP):
+        label = customtkinter.CTkLabel(app, text="", fg_color="transparent")
+        label = customtkinter.CTkLabel(app, text=str(round(value)), fg_color="transparent")
+        label.grid(row=len(self.ip_entry_widgets) + 9, column=3, columnspan=1, padx=10, pady=10)
+        
         UDP_IP_TX = IP
         UDP_PORT_TX = 1111
         
-        MESSAGE = "E/cv_ref/" + str(value)
+        MESSAGE = "E/cv_ref/" + str(round(value))
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
         print("message:", MESSAGE, "IP:",IP)
+        
     
     def updateValueD(self, value, IP):
+        labelV_nu = customtkinter.CTkLabel(app, text="", fg_color="transparent")
+        labelV_num = customtkinter.CTkLabel(app, text=str(round(value)), fg_color="transparent")
+        labelV_num.grid(row=len(self.ip_entry_widgets) + 10, column=3, columnspan=1, padx=10, pady=10)
+        
         UDP_IP_TX = IP
         UDP_PORT_TX = 1111
         
-        MESSAGE = "E/cd_ref/" + str(value)
+        MESSAGE = "E/cd_ref/" + str(round(value))
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
         print("message:", MESSAGE, "IP:",IP)
-
     
     def getIP(self,label):
         targetIP=""
         for entry in self.ip_entry_widgets:
-            #print(entry[1].get(), "==", label)
             if entry[1].get() == label:
                 targetIP = entry[0].get()
-        #print(targetIP)
         return targetIP
     
     def GetData(self, out_data,dato,figure):
@@ -269,17 +283,8 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
         dataCollector2.start()
         dataCollector3.start()
 
-        '''
-        def on_close(event):
-            dataCollector1.join()  # Esperar a que el hilo termine
-            dataCollector2.join()
-            dataCollector3.join()
-            sys.exit(0)  # Salir del programa
 
-        # Configurar el evento de cierre de la ventana
-        fig.canvas.mpl_connect('close_event', on_close)
-        '''
-        fig.canvas.manager.window.wm_geometry("+800+0")
+        fig.canvas.manager.window.wm_geometry("+1000+0")
         plt.show()
         
         
@@ -288,63 +293,54 @@ class Window(tk.Tk):  # Heredar de tk.Tk para crear la ventana principal
     def start_monitoring_vel(self):
         self.animate_vel()
 
-    #-----------------------
+    def controllView(self):
         
-    def open_monitor_window(self):
-        #if hasattr(self, 'monitor_window') and self.monitor_window.winfo_exists():
-        #    return
-
-        #monitor_window = tk.Toplevel(self)
-        #monitor_window.title("Monitor")
-        #monitor_window.geometry("800x600")  # Tamaño de la ventana del monitor
-
-
-        # Crear una lista de letras para las opciones de la lista desplegable
+        title = customtkinter.CTkLabel(app, text="Panel de Control", font =("Serif",18), fg_color="transparent",compound="center")
+        
         self.letras = [entry[1].get() for entry in self.ip_entry_widgets]
-        self.letter_combobox = ttk.Combobox(self, textvariable=self.selected_letter, values=self.letras)
-                
+        self.letter_combobox = customtkinter.CTkComboBox(self, values=self.letras_lista,variable=self.selected_letter )
+       
         # Posicionar los sliders y labels
-        labelV = tk.Label(self, text="Velocidad")
-        sliderV = tk.Scale(self, from_=min_v, to=max_v, orient="horizontal")
+        labelV = customtkinter.CTkLabel(self, text="Velocidad")
+        sliderV = customtkinter.CTkSlider(self, from_=min_v, to=max_v, orientation="horizontal")
         sliderV.bind("<ButtonRelease-1>", lambda event: self.updateValueV(sliderV.get(),self.getIP(self.letter_combobox.get())))
 
-        labelD = tk.Label(self, text="Distancia")
-        sliderD = tk.Scale(self, from_=min_d, to=max_d, orient="horizontal")
+        labelD = customtkinter.CTkLabel(self, text="Distancia")
+        sliderD = customtkinter.CTkSlider(self, from_=min_d, to=max_d, orientation="horizontal")
         sliderD.bind("<ButtonRelease-1>", lambda event: self.updateValueD(sliderD.get(),self.getIP(self.letter_combobox.get())))
 
-        iniciar_button_monitor = tk.Button(self, text="Iniciar", command=self.clickIniciarButton) #cambiar por sliderV.get()
-        stop_button_monitor = tk.Button(self, text="Detener", command=self.clickStopButton)
+        
+        iniciar_button_monitor = customtkinter.CTkButton(self, width = 60,text="Iniciar", command=self.clickIniciarButton) #cambiar por sliderV.get()
+        stop_button_monitor = customtkinter.CTkButton(self, width = 60, text="Detener", command=self.clickStopButton)
 
         # Agregar un botón para iniciar el monitoreo y la animación
-        start_monitor_button = tk.Button(self, text="Monitorear Velocidad", command=self.start_monitoring_vel)
-        start_monitor_button.grid(row=len(self.ip_entry_widgets) + 8, column=2, padx=10, pady=10)
-       
+        monitor_button = customtkinter.CTkButton(self, text="Monitorear Señales", command=self.start_monitoring_vel)
+        
         '''----------------Posicionar elementos en la App--------------''' 
-        # Posicionar los botones 
-        #calibrar_button_monitor.grid(row=4, column=0, padx=10, pady=10)
-        iniciar_button_monitor.grid(row=len(self.ip_entry_widgets) + 8, column=1, padx=10, pady=10)
-        stop_button_monitor.grid(row=len(self.ip_entry_widgets) + 8, column=0, padx=10, pady=10)
-        
-        
-        empty_label = tk.Label(self, text="")
-        empty_label.grid(row=len(self.ip_entry_widgets) + 3, columnspan=3)  # Ajusta la columna según tus necesidades
+             
+        empty_label = customtkinter.CTkLabel(self, text="")
+        empty_label.grid(row=len(self.ip_entry_widgets) + 6, columnspan=1)  # Ajusta la columna según tus necesidades
 
+        title.grid(row=len(self.ip_entry_widgets) + 7, column=1,columnspan=3, padx=10, pady=10)
         
-        self.labelRobot.grid(row=len(self.ip_entry_widgets) + 5, column=0, padx=10, pady=10) 
-        self.letter_combobox.grid(row=len(self.ip_entry_widgets) + 5, column=1, padx=10, pady=10)
+        self.labelRobot.grid(row=len(self.ip_entry_widgets) + 8, column=1, padx=10, pady=10) 
+        self.letter_combobox.grid(row=len(self.ip_entry_widgets) + 8, column=2, padx=10, pady=10)
 
         #Sliders
-        labelV.grid(row=len(self.ip_entry_widgets) + 6, column=0, columnspan=3, padx=10, pady=10)
-        sliderV.grid(row=len(self.ip_entry_widgets) + 6, column=2, padx=10, pady=10)
+        labelV.grid(row=len(self.ip_entry_widgets) + 9, column=1, columnspan=1, padx=10, pady=10)
+        sliderV.grid(row=len(self.ip_entry_widgets) + 9, column=2, padx=10, pady=10)
 
-        labelD.grid(row=len(self.ip_entry_widgets) + 7, column=0, columnspan=3, padx=10, pady=10)
-        sliderD.grid(row=len(self.ip_entry_widgets) + 7, column=2, padx=10, pady=10)
+        labelD.grid(row=len(self.ip_entry_widgets) + 10, column=1, columnspan=1, padx=10, pady=10)
+        sliderD.grid(row=len(self.ip_entry_widgets) + 10, column=2, padx=10, pady=10)
 
-    def on_closing(self):
-        if len(self.ip_entry_widgets)>0:
-            self.clickStopButton()
-        self.destroy()
-
-app = Window()
+    
+        # Posicionar los botones 
+        iniciar_button_monitor.grid(row=len(self.ip_entry_widgets) + 8, column=0, padx=10, pady=10)
+        stop_button_monitor.grid(row=len(self.ip_entry_widgets) + 9, column=0, padx=10, pady=10)
+        monitor_button.grid(row=len(self.ip_entry_widgets) + 11, column=1,columnspan=2, padx=10, pady=10)
+       
+       
+customtkinter.set_default_color_theme("dark-blue")
+customtkinter.set_appearance_mode("dark")
+app = App()
 app.mainloop()
-
