@@ -13,9 +13,9 @@
 #define ssid "fvp"    //laboratorioUSM
 #define password "nomeacuerdo"
 
-#define IP_monitoreo "192.168.1.101"     //ip del dispositivo que va a supervisar los datos 
+#define IP_monitoreo "192.168.1.103"     //ip del dispositivo que va a supervisar los datos 
 #define puerto_monitoreo 1234           //puerto de envio UDP monitoreo
-#define IP_sucesor "192.168.1.103"   //ip del robot sucesor
+#define IP_sucesor "192.168.1.104"   //ip del robot sucesor
 #define puerto_sucesor 1111          //puerto del robot sucesor
 #define puerto_local 1111               //puerto local
 ////////

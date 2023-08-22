@@ -76,7 +76,7 @@ class App(customtkinter.CTk):
         self.num_label = customtkinter.CTkLabel(self, text="Número de robots")
         self.num_label.grid(row=1, column=0, padx=5, pady=5)
         
-        self.entry_num = customtkinter.CTkComboBox(self, values=["1", "2","3","4","5","6","7","8","9","10"])
+        self.entry_num = customtkinter.CTkComboBox(self, values=["1", "2","3","4","5","6"])
         self.entry_num.grid(row=1, column=1, padx=5, pady=5)
         self.entry_num.set("1") 
         
@@ -225,11 +225,11 @@ class App(customtkinter.CTk):
             data, addr = sock_RX.recvfrom(4096)
             testo = str(data.decode('utf-8'))
             lista = testo.split(",")
-            texto = open(file_name, "a")
-            texto.write(testo+'\n')
-            texto.close()
+            #texto = open(file_name, "a")
+            #texto.write(testo+'\n')
+            #texto.close()
             #print(self.letter_combobox.get())
-            figure.suptitle("Señal robot " + self.letter_combobox.get(), fontsize=16)
+            #figure.suptitle("Señal robot " + self.letter_combobox.get(), fontsize=16)
             
             if lista[0] == self.letter_combobox.get():
                 out_data[1].append(float(lista[dato]))
@@ -288,6 +288,16 @@ class App(customtkinter.CTk):
         plt.show()
         
         
+        def on_close(event):
+            '''dataCollector1.join()  # Esperar a que el hilo termine
+            dataCollector2.join()
+            dataCollector3.join()'''
+            sys.exit(0)  # Salir del programa
+
+        # Configurar el evento de cierre de la ventana
+        fig.canvas.mpl_connect('close_event', on_close)
+        
+        
             
 
     def start_monitoring_vel(self):
@@ -297,7 +307,7 @@ class App(customtkinter.CTk):
         
         title = customtkinter.CTkLabel(app, text="Panel de Control", font =("Serif",18), fg_color="transparent",compound="center")
         
-        self.letras = [entry[1].get() for entry in self.ip_entry_widgets]
+        self.letras_lista = [entry[1].get() for entry in self.ip_entry_widgets]
         self.letter_combobox = customtkinter.CTkComboBox(self, values=self.letras_lista,variable=self.selected_letter )
        
         # Posicionar los sliders y labels
