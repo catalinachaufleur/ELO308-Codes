@@ -35,7 +35,7 @@ double calculoPID(double y,double ref,double &error_ant,double &error_integral,d
 }
 
 double calculoPIDd(double y,double ref,double &error_ant,double &error_integral,double kp,double ki,double kd,double limite, String MODO, double &out_manual, String direccion){
-  int satMax = 0.5;
+  int satMax = 1;
   if(MODO=="MANUAL"){
     return out_manual;
   }

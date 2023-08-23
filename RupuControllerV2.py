@@ -168,8 +168,8 @@ class App(customtkinter.CTk):
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
         #print("message:", MESSAGE, "IP", self.ip_entry_widgets[0][0].get())
         tm.sleep(0.5)
-        MESSAGE = "E/cv_ref/" + str(min_v)
-        sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
+        #MESSAGE = "E/cv_ref/" + str(min_v)
+        #sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
         for i in range(len(self.ip_entry_widgets)-1):
             UDP_IP_TX = self.ip_entry_widgets[i-1][0].get()
@@ -225,10 +225,10 @@ class App(customtkinter.CTk):
             data, addr = sock_RX.recvfrom(4096)
             testo = str(data.decode('utf-8'))
             lista = testo.split(",")
-            #texto = open(file_name, "a")
-            #texto.write(testo+'\n')
-            #texto.close()
-            #print(self.letter_combobox.get())
+            texto = open(file_name, "a")
+            texto.write(testo+'\n')
+            texto.close()
+            print(self.letter_combobox.get())
             #figure.suptitle("Señal robot " + self.letter_combobox.get(), fontsize=16)
             
             if lista[0] == self.letter_combobox.get():
@@ -291,8 +291,8 @@ class App(customtkinter.CTk):
         def on_close(event):
             '''dataCollector1.join()  # Esperar a que el hilo termine
             dataCollector2.join()
-            dataCollector3.join()'''
-            sys.exit(0)  # Salir del programa
+            dataCollector3.join()
+            sys.exit(0)  # Salir del programa'''
 
         # Configurar el evento de cierre de la ventana
         fig.canvas.mpl_connect('close_event', on_close)
