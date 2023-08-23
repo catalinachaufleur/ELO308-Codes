@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/styles.css">
+  <title>Entorno de trabajo - RÜPÜ</title>
+  <link rel="icon" type="image/x-icon" href="iconRupu.ico"/>
+</head>
+<body>
+<header>
+  <div class="logo"><img src="logoRupuBlanco.png" alt="Logo" width="100">
+  </div>
+  <nav class="header-links">
+    <a href="Rüpü.html">Sobre el Proyecto</a>
+    <a href="documentation.html">Documentación</a>
+    <a href="https://github.com/catalinachaufleur/ELO308-Codes" target="_blank">
+      <img src="github-logo.png" alt="GitHub" width="30" height="30">
+    </a>
+  </nav>
+</header>
+
+<div class="container">
+  <aside class="sidebar">
+    <div class="sidebar-image">
+      <img src="robot.png" alt="Imagen de la barra lateral" width="70%">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#armado">Armado</a></li>
+        <li>
+          <a href="#entorno-trabajo">Entorno de trabajo</a>
+          <ul>
+            <li></li>
+            <li><a href="#instalacion-programas">Instalación programas</a></li>
+            <li><a href="#set-up-arduino">Set up Arduino</a></li>
+            <li><a href="#set-up-python">Set up Python</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="programacion.html">Programación</a>
+          <ul>
+            <li><a href="#cargar-codigo">Preparación</a></li>
+            <li><a href="#gui">Control y monitoreo</a></li>
+          </ul>
+        </li>
+        <li><a href="#demostraciones">Demostraciones</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <h1>Entorno de trabajo</h1>
+
+    <p  class="content-paragraph" > En esta sección se revisarán todos los programas y librerías requeridas para manejar la plataforma RÜPÜ.
+
+    </p>
+    <h2>Instalación de programas</h2>
+    <p class="content-paragraph">
+      Comienza descargando e instalando el
+      IDE de <a href="https://docs.arduino.cc/software/ide-v2">Arduino</a>. Es importante que tengas en cuenta que RÜPÜ soporta hasta la <b>versión 2.1.1</b>, nuevas versiones deberán ser verificadas.
+      De igual forma, descarga e instala <a href="https://www.python.org/downloads/">Python</a>, en este caso, RÜPÜ tiene soporte hasta la <b> versión 3.x.x</b>.
+
+
+
+    <h2>Set up Arduino</h2>
+    <p  class="content-paragraph">
+      En esta sección se realizará la configuración del IDE de Arduino para poder cargar los códigos a las placas ESP32. Esta configuración contempla el gestor de tarjetas y las librerías que se utilizarán en el código.
+    </p>
+
+    <h3>Gestor de tarjeta</h3>
+    <p class="content-paragraph" >
+      El gestor de tarjeta es la herramienta que permite utilizar los módulos ESP32 a través del IDE de Arduino, utilizaremos la versión <b>1.0.4</b> del gestor <b> esp32</b> creado por <b>Espressif Systems</b>.
+    </p>
+
+    <ol>
+      <li>Dirígete a File>Preferences</li>
+      <li>Pega el siguiente link en "Additional Boards"</li>
+
+        <div class="copy">
+          https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+        </div>
+        <div class="centered-image">
+          <img src="boardlink.gif" alt="Board Link">
+        </div>
+      <li> Ve al gestor de tarjetas y busca <i>esp32 Espressif</i></li>
+      <li> Instala la versión 1.0.4 </li>
+
+        <div class="centered-image">
+          <img src="board.gif" alt="Board">
+        </div>
+    </ol>
+
+
+    <h3>Librerías</h3>
+
+    <p class="content-paragraph">
+      El código a utilizar para controlar los robots requiere de la instalación de las siguientes librerías:
+    </p>
+    <ul>
+      <li> VL53L0X by Pololu V.1.3.1</li>
+      <li> analogWrite by ErroPix V.0.1</li>
+      <li> Encoder by Paul Stoffregen V.1.4.2</li>
+
+    </ul>
+
+    <div class="centered-image">
+      <img src="libreriasA.gif" alt="Board">
+    </div>
+
+    <h2>Set up Python</h2>
+
+   <p  class="content-paragraph" >
+      Para utilizar la interfaz gráfica de usuario provista para RÜPÜ es necesario instalar ciertas librerías antes de correr el código. Por esta razón se utilizará pip install para realizar la descarga e instalación:
+    </p>
+    <div class="centered-image">
+      <img src="pipinstall.gif" alt="Pip Install">
+    </div>
+
+    <p  class="content-paragraph" >
+      Las librerías a instalar corresponden a (link librería)
+    </p>
+
+    <pre><code>
+    $ pip install customtkinter
+    $ pip install matplotlib
+    </code></pre>
+
+
+    <a href="programacion.html" class="button_next">Continuar a Programación >> </a>
+    <a href="programacion.html" class="button_prev"> << Volver a Armado </a>
+
+
+  </main>
+</div>
+
+</body>
+</html>

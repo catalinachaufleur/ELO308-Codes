@@ -10,16 +10,16 @@
 ///////////////////////////////////////
 //     Configuración RED   ///////////
 ///////////////////////////////////////
-#define ssid "fvp"    //laboratorioUSM
-#define password "nomeacuerdo"
+#define ssid "NombreRedWifi"    
+#define password "ContraseñaRedWifi"
 
 #define IP_monitoreo "192.168.1.103"     //ip del dispositivo que va a supervisar los datos 
 #define puerto_monitoreo 1234           //puerto de envio UDP monitoreo
-#define IP_sucesor "192.168.1.104"   //ip del robot sucesor
+#define IP_sucesor "192.168.1.0"   //ip del robot sucesor
 #define puerto_sucesor 1111          //puerto del robot sucesor
 #define puerto_local 1111               //puerto local
 ////////
-#define EtiquetaRobot "L"   // "L": Robot0 (lider)   "S": robot2    "T": Robot3    "O": Robot4 
+#define EtiquetaRobot "T"   // "L": Robot0 (lider)   "S": robot2    "T": Robot3    "O": Robot4 
 #define led 2
 #define radio_rueda 2.15 //RADIO EN [CM]
 #define l 5.6 // l corresponde a la distancia entre las ruedas en cm
