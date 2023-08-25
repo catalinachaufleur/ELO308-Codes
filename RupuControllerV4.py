@@ -41,11 +41,11 @@ texto = open(file_name,'w')
 texto.write('Robot,Delta_muestra,Input_d,d_ref,vel_ref,Input_vel,Input_theta,Output_d,Output_vel,Output_theta'+'\n')
 texto.close()
 
-min_v = 8
-max_v = 19
+min_v = 0
+max_v = 30
 
-min_d = 10
-max_d = 15
+min_d = 5
+max_d = 25
 
 gData1 = [[0], [0]]
 gData2 = [[0], [0]]
@@ -100,6 +100,9 @@ class App(customtkinter.CTk):
 
         self.labelRobot = customtkinter.CTkLabel(self, text="Etiqueta robot:")
         self.letter_combobox.set("L")
+
+        #switch pestaña de control
+        self.switch_var = customtkinter.StringVar(value="off")
         
         
     #Función Cierre App
@@ -188,36 +191,63 @@ class App(customtkinter.CTk):
 
 
     def updateValueV(self, value,IP):
-        label = customtkinter.CTkLabel(app, text="", fg_color="transparent")
+        label = customtkinter.CTkLabel(app, text="    ", fg_color="transparent")
         label = customtkinter.CTkLabel(app, text=str(round(value)), fg_color="transparent")
         label.grid(row=len(self.ip_entry_widgets) + 9, column=3, columnspan=1, padx=10, pady=10)
         
-        UDP_IP_TX = IP
-        UDP_PORT_TX = 1111
+        if IP != "ALL":
+            UDP_IP_TX = IP
+            UDP_PORT_TX = 1111
         
-        MESSAGE = "E/cv_ref/" + str(round(value))
-        sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
-        print("message:", MESSAGE, "IP:",IP)
+            MESSAGE = "E/cv_ref/" + str(round(value))
+            sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
+            print("message:", MESSAGE, "IP:",IP)
+        else:
+            for i in range(len(self.ip_entry_widgets)):
+                UDP_IP_TX = self.ip_entry_widgets[i][0].get()
+                UDP_PORT_TX = 1111
+        
+                MESSAGE = "E/cv_ref/" + str(round(value))
+                print("message:", MESSAGE, "IP:",UDP_IP_TX)
+
+                #sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
+               
         
     
     def updateValueD(self, value, IP):
-        labelV_nu = customtkinter.CTkLabel(app, text="", fg_color="transparent")
+        labelV_nu = customtkinter.CTkLabel(app, text="    ", fg_color="transparent")
         labelV_num = customtkinter.CTkLabel(app, text=str(round(value)), fg_color="transparent")
-        labelV_num.grid(row=len(self.ip_entry_widgets) + 10, column=3, columnspan=1, padx=10, pady=10)
+        labelV_num.grid(row=len(self.ip_entry_widgets) + 11, column=3, columnspan=1, padx=10, pady=10)
         
-        UDP_IP_TX = IP
-        UDP_PORT_TX = 1111
-        
-        MESSAGE = "E/cd_ref/" + str(round(value))
-        sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
-        print("message:", MESSAGE, "IP:",IP)
+        if IP != "ALL":
+            UDP_IP_TX = IP
+            UDP_PORT_TX = 1111
+
+            MESSAGE = "E/cd_ref/" + str(round(value))
+            sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
+            print("message:", MESSAGE, "IP:",IP)
+
+        else:
+            for i in range(len(self.ip_entry_widgets)):
+                UDP_IP_TX = self.ip_entry_widgets[i][0].get()
+                UDP_PORT_TX = 1111
+            
+
+                MESSAGE = "E/cd_ref/" + str(round(value))
+                print("message:", MESSAGE, "IP:",UDP_IP_TX)
+                #sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
+                
+                
     
     def getIP(self,label):
         targetIP=""
-        for entry in self.ip_entry_widgets:
-            if entry[1].get() == label:
-                targetIP = entry[0].get()
-        return targetIP
+        if label != "ALL":
+            for entry in self.ip_entry_widgets:
+                if entry[1].get() == label:
+                    targetIP = entry[0].get()
+            return targetIP
+        else:
+            return "ALL"
     
     def GetData(self, out_data,dato,figure):
 
@@ -303,12 +333,15 @@ class App(customtkinter.CTk):
     def start_monitoring_vel(self):
         self.animate_vel()
 
+
+    """
     def vuelta1(self):
-        UDP_IP_TX = self.ip_entry_widgets[0][1].get()
+        UDP_IP_TX = self.ip_entry_widgets[0][0].get()
         UDP_PORT_TX = 1111
         
         MESSAGE = "E/cv_ref/" + str(round(8))
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
+        print(UDP_IP_TX)
 
 
     def vuelta2(self):
@@ -317,11 +350,11 @@ class App(customtkinter.CTk):
         MESSAGE = "E/cv_ref/" + str(round(8))
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
-        UDP_IP_TX = self.ip_entry_widgets[0][1].get()
+        UDP_IP_TX = self.ip_entry_widgets[1][0].get()
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
         MESSAGE = "E/cd_ref/" + str(round(15))
 
-        UDP_IP_TX = self.ip_entry_widgets[0][2].get()
+        UDP_IP_TX = self.ip_entry_widgets[2][0].get()
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
         MESSAGE = "E/cd_ref/" + str(round(15))
 
@@ -331,28 +364,45 @@ class App(customtkinter.CTk):
         MESSAGE = "E/cv_ref/" + str(round(19))
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
-        UDP_IP_TX  = self.ip_entry_widgets[0][1].get()
+        UDP_IP_TX  = self.ip_entry_widgets[1][0].get()
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
         MESSAGE = "E/cd_ref/" + str(round(10))
 
-        UDP_IP_TX  = self.ip_entry_widgets[0][2].get()
+        UDP_IP_TX  = self.ip_entry_widgets[2][0].get()
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
-        MESSAGE = "E/cd_ref/" + str(round(10))
+        MESSAGE = "E/cd_ref/" + str(round(10))  
+        """
 
+    def switch_event(self):
+        print("switch toggled, current value:", self.switch_var.get())
+        if self.switch_var.get() =="on":
+            self.clickIniciarButton()
+        else:
+            self.clickStopButton()
 
+    def testdemo(self):
 
+        self.toplevel_window = ToplevelWindow(self)  # create window if its None or destroyed
+        self.toplevel_window.focus()  # if window exists focus it
         
 
     def controllView(self):
         
+
+
         title = customtkinter.CTkLabel(app, text="Panel de Control", font =("Serif",18), fg_color="transparent",compound="center")
         
         self.letras_lista = [entry[1].get() for entry in self.ip_entry_widgets]
-        self.letter_combobox = customtkinter.CTkComboBox(self, values=self.letras_lista,variable=self.selected_letter )
+        if len(self.letras_lista)>1:
+            self.letras_lista.append("ALL")
+        self.letter_combobox = customtkinter.CTkComboBox(self, values=self.letras_lista,variable=self.selected_letter)
+
+        switch = customtkinter.CTkSwitch(app, text="Estado Robot", command=self.switch_event,
+                                 variable=self.switch_var, onvalue="on", offvalue="off")
        
         # Posicionar los sliders y labels
         labelV = customtkinter.CTkLabel(self, text="Velocidad")
-        sliderV = customtkinter.CTkSlider(self, from_=min_v, to=max_v, orientation="horizontal")
+        sliderV = customtkinter.CTkSlider(self, from_=min_v, to=max_v, orientation="horizontal",state="normal")
         sliderV.bind("<ButtonRelease-1>", lambda event: self.updateValueV(sliderV.get(),self.getIP(self.letter_combobox.get())))
 
         labelD = customtkinter.CTkLabel(self, text="Distancia")
@@ -365,34 +415,59 @@ class App(customtkinter.CTk):
 
         # Agregar un botón para iniciar el monitoreo y la animación
         monitor_button = customtkinter.CTkButton(self, text="Monitorear Señales", command=self.start_monitoring_vel)
+
+        validar_button = customtkinter.CTkButton(self, text="Validar", command=self.testdemo)
+
+        #Configuración del controlador PID
+       
+       
+        """ Test videos
         v1_button = customtkinter.CTkButton(self, text="Vuelta 1", command=self.vuelta1)
         v2_button = customtkinter.CTkButton(self, text="Vuelta 2", command=self.vuelta2)
         v3_button = customtkinter.CTkButton(self, text="Vuelta 3", command=self.vuelta3)
-        v1_button.grid(row=len(self.ip_entry_widgets) + 12, column=1,columnspan=2, padx=10, pady=10)
-        v2_button.grid(row=len(self.ip_entry_widgets) + 12, column=2,columnspan=2, padx=10, pady=10)
-        v3_button.grid(row=len(self.ip_entry_widgets) + 12, column=3,columnspan=2, padx=10, pady=10)
+        v1_button.grid(row=len(self.ip_entry_widgets) + 12, column=1,columnspan=1, padx=10, pady=10)
+        v2_button.grid(row=len(self.ip_entry_widgets) + 12, column=2,columnspan=1, padx=10, pady=10)
+        v3_button.grid(row=len(self.ip_entry_widgets) + 12, column=3,columnspan=1, padx=10, pady=10)
+        
+        """
+        
+        
+        
         '''----------------Posicionar elementos en la App--------------''' 
              
         empty_label = customtkinter.CTkLabel(self, text="")
         empty_label.grid(row=len(self.ip_entry_widgets) + 6, columnspan=1)  # Ajusta la columna según tus necesidades
 
         title.grid(row=len(self.ip_entry_widgets) + 7, column=1,columnspan=3, padx=10, pady=10)
+
+        switch.grid(row=len(self.ip_entry_widgets) + 8, column=1, padx=10, pady=10)
+        validar_button.grid(row=len(self.ip_entry_widgets) +8, column=2, padx=10, pady=10)
         
-        self.labelRobot.grid(row=len(self.ip_entry_widgets) + 8, column=1, padx=10, pady=10) 
-        self.letter_combobox.grid(row=len(self.ip_entry_widgets) + 8, column=2, padx=10, pady=10)
+        self.labelRobot.grid(row=len(self.ip_entry_widgets) + 9, column=1, padx=10, pady=10) 
+        self.letter_combobox.grid(row=len(self.ip_entry_widgets) + 9, column=2, padx=10, pady=10)
 
         #Sliders
-        labelV.grid(row=len(self.ip_entry_widgets) + 9, column=1, columnspan=1, padx=10, pady=10)
-        sliderV.grid(row=len(self.ip_entry_widgets) + 9, column=2, padx=10, pady=10)
+        labelV.grid(row=len(self.ip_entry_widgets) + 10, column=1, columnspan=1, padx=10, pady=10)
+        sliderV.grid(row=len(self.ip_entry_widgets) + 10, column=2, padx=10, pady=10)
 
-        labelD.grid(row=len(self.ip_entry_widgets) + 10, column=1, columnspan=1, padx=10, pady=10)
-        sliderD.grid(row=len(self.ip_entry_widgets) + 10, column=2, padx=10, pady=10)
+        labelD.grid(row=len(self.ip_entry_widgets) + 11, column=1, columnspan=1, padx=10, pady=10)
+        sliderD.grid(row=len(self.ip_entry_widgets) + 11, column=2, padx=10, pady=10)
 
     
         # Posicionar los botones 
-        iniciar_button_monitor.grid(row=len(self.ip_entry_widgets) + 8, column=0, padx=10, pady=10)
-        stop_button_monitor.grid(row=len(self.ip_entry_widgets) + 9, column=0, padx=10, pady=10)
-        monitor_button.grid(row=len(self.ip_entry_widgets) + 11, column=1,columnspan=2, padx=10, pady=10)
+        #iniciar_button_monitor.grid(row=len(self.ip_entry_widgets) + 8, column=0, padx=10, pady=10)
+        #stop_button_monitor.grid(row=len(self.ip_entry_widgets) + 9, column=0, padx=10, pady=10)
+        monitor_button.grid(row=len(self.ip_entry_widgets) + 12, column=1,columnspan=2, padx=10, pady=10)
+
+class ToplevelWindow(customtkinter.CTkToplevel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.geometry("400x300+1200+300")
+
+        self.label = customtkinter.CTkLabel(self, text="Validación de Funcionamiento")
+        self.label.pack(padx=20, pady=20)
+
+        
        
        
 customtkinter.set_default_color_theme("dark-blue")
