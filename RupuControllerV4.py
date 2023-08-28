@@ -34,7 +34,7 @@ sock_RX = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock_RX.bind((UDP_IP_RX, UDP_PORT_RX))
 
 #---------------------------------------------------------
-file_name = "monitoreo5.csv"  # archivo csv
+file_name = "monitoreo10.csv"  # archivo csv
 texto = open(file_name,'w')
 #estado = "T,"+String(Input_d)+","+String(d_ref)+","+String(vel_ref)+","+String(Input_vel)+","+String(Input_theta)+","+String(Output_d)+","+String(Output_vel)+","+String(Output_theta);
  
@@ -62,7 +62,7 @@ class App(customtkinter.CTk):
         self.title("RÜPÜ Controller")
         self.geometry("700x800+0+0") 
         
-        self.letras_sugeridas =["L","S","T"]
+        self.letras_sugeridas =["L","S","T","O"]
         
         #Ingresar IP Monitor          
         self.monitor_ip_label = customtkinter.CTkLabel(self, text= "IP Monitor:", fg_color="transparent")
@@ -128,7 +128,7 @@ class App(customtkinter.CTk):
 
             ip_entry =  customtkinter.CTkEntry(self)
             ip_entry.grid(row=i + 3, column=1, padx=5, pady=5)
-            ip_entry.insert(tk.END,'192.168.1.1')
+            ip_entry.insert(tk.END,'192.168.1.10')
 
             #letter_label = customtkinter.CTkLabel(self, text=f'Etiqueta {i + 1}:')
             #letter_label.grid(row=i + 3, column=2, padx=5, pady=5)
@@ -175,8 +175,9 @@ class App(customtkinter.CTk):
         #sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
         for i in range(len(self.ip_entry_widgets)-1):
-            UDP_IP_TX = self.ip_entry_widgets[i-1][0].get()
-            MESSAGE = "E/cd_ref/" + str(min_d)
+            UDP_IP_TX = self.ip_entry_widgets[i+1][0].get()
+            dist =10
+            MESSAGE = "E/cd_ref/" + str(dist)
             print(MESSAGE, UDP_IP_TX)
             sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
@@ -334,20 +335,20 @@ class App(customtkinter.CTk):
         self.animate_vel()
 
 
-    """
+    
     def vuelta1(self):
         UDP_IP_TX = self.ip_entry_widgets[0][0].get()
         UDP_PORT_TX = 1111
         
-        MESSAGE = "E/cv_ref/" + str(round(8))
+        MESSAGE = "E/cv_ref/" + str(round(10))
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
-        print(UDP_IP_TX)
+        #print(UDP_IP_TX)
 
 
     def vuelta2(self):
         UDP_IP_TX =  self.ip_entry_widgets[0][0].get()
         UDP_PORT_TX = 1111
-        MESSAGE = "E/cv_ref/" + str(round(8))
+        MESSAGE = "E/cv_ref/" + str(round(10))
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
         UDP_IP_TX = self.ip_entry_widgets[1][0].get()
@@ -358,10 +359,15 @@ class App(customtkinter.CTk):
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
         MESSAGE = "E/cd_ref/" + str(round(15))
 
+        UDP_IP_TX = self.ip_entry_widgets[3][0].get()
+        sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
+        MESSAGE = "E/cd_ref/" + str(round(15))
+
+
     def vuelta3(self):
         UDP_IP_TX = self.ip_entry_widgets[0][0].get()
         UDP_PORT_TX = 1111
-        MESSAGE = "E/cv_ref/" + str(round(19))
+        MESSAGE = "E/cv_ref/" + str(round(20))
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
         UDP_IP_TX  = self.ip_entry_widgets[1][0].get()
@@ -370,8 +376,13 @@ class App(customtkinter.CTk):
 
         UDP_IP_TX  = self.ip_entry_widgets[2][0].get()
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
-        MESSAGE = "E/cd_ref/" + str(round(10))  
-        """
+        MESSAGE = "E/cd_ref/" + str(round(10)) 
+
+        UDP_IP_TX = self.ip_entry_widgets[3][0].get()
+        sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
+        MESSAGE = "E/cd_ref/" + str(round(10))
+
+    
 
     def switch_event(self):
         print("switch toggled, current value:", self.switch_var.get())
@@ -421,15 +432,15 @@ class App(customtkinter.CTk):
         #Configuración del controlador PID
        
        
-        """ Test videos
+        """ Test videos"""
         v1_button = customtkinter.CTkButton(self, text="Vuelta 1", command=self.vuelta1)
         v2_button = customtkinter.CTkButton(self, text="Vuelta 2", command=self.vuelta2)
         v3_button = customtkinter.CTkButton(self, text="Vuelta 3", command=self.vuelta3)
-        v1_button.grid(row=len(self.ip_entry_widgets) + 12, column=1,columnspan=1, padx=10, pady=10)
-        v2_button.grid(row=len(self.ip_entry_widgets) + 12, column=2,columnspan=1, padx=10, pady=10)
-        v3_button.grid(row=len(self.ip_entry_widgets) + 12, column=3,columnspan=1, padx=10, pady=10)
+        v1_button.grid(row=len(self.ip_entry_widgets) + 13, column=1,columnspan=1, padx=10, pady=10)
+        v2_button.grid(row=len(self.ip_entry_widgets) + 13, column=2,columnspan=1, padx=10, pady=10)
+        v3_button.grid(row=len(self.ip_entry_widgets) + 13, column=3,columnspan=1, padx=10, pady=10)
         
-        """
+        
         
         
         

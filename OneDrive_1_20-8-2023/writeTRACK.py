@@ -10,7 +10,7 @@ agentLength = 5 	# cm (cube)
 positions = [[443, 243], [419, 612], [1502, 233], [1535, 601]]		# for perspective transform
 countClicks = 0
 
-fileName = '5%.mp4'
+fileName = '10%.mp4'
 outputName = 'trackPoints10.csv'
 
 
@@ -39,7 +39,7 @@ cv.destroyWindow('Pixels to centimetres')
 
 # initialise tracker1
 bbox11 = cv.selectROI('Tracking_v3', frame, False)
-tracker11 = cv.legacy.TrackerCSRT_create()
+tracker11 = cv.TrackerCSRT_create()
 tracker11.init(frame, bbox11)
 
 cv.destroyWindow('Tracking_v3')
