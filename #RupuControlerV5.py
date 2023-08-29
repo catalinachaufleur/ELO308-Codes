@@ -126,8 +126,12 @@ class App(customtkinter.CTk):
         self.tabviewControlFrame.grid(row=0,column=0)
         
         self.empty2 = customtkinter.CTkLabel(self.tabviewControlFrame, text= "         ", fg_color="transparent")
-        self.empty2.grid(row=1, column=0, padx=5, pady=5)
-              
+        self.empty2.grid(row=0, column=0, padx=5, pady=5)
+        
+        self.switch_var = customtkinter.StringVar(value="off")
+        self.switch = customtkinter.CTkSwitch(self.tabviewControlFrame, text="Estado Robot", command=self.switch_event,variable=self.switch_var, onvalue="on", offvalue="off")
+        self.switch.grid(row=0, column=2, padx=10, pady=10)
+             
         #crear lista de letras desplegable
         self.letras_lista = []
         
@@ -137,17 +141,14 @@ class App(customtkinter.CTk):
             self.letras_lista.append("ALL")
             
         self.labelRobot = customtkinter.CTkLabel(self.tabviewControlFrame, text="Etiqueta robot:")
-        self.labelRobot.grid(row=1, column=3, padx=10, pady=10) 
+        self.labelRobot.grid(row=2, column=2, padx=10, pady=10) 
         
         self.selected_letter = customtkinter.StringVar()
     
         self.letter_combobox = customtkinter.CTkComboBox(self.tabviewControlFrame, values=self.letras_lista,variable=self.selected_letter)
         self.letter_combobox.set("L")
-        self.letter_combobox.grid(row=1, column=4, padx=10, pady=10)
+        self.letter_combobox.grid(row=2, column=3, padx=10, pady=10)
 
-        #self.switch_var = customtkinter.StringVar(value="off")
-        #self.switch = customtkinter.CTkSwitch(self.tabviewControl, text="Estado Robot", command=self.switch_event,variable=self.switch_var, onvalue="on", offvalue="off")
-        #self.switch.grid(row=len(self.ip_entry_widgets) + 8, column=1, padx=10, pady=10)
         
         # Posicionar los sliders y labels
         labelV = customtkinter.CTkLabel(self.tabviewControlFrame, text="Velocidad")
@@ -156,8 +157,8 @@ class App(customtkinter.CTk):
         self.labelVvalue = customtkinter.CTkLabel(self.tabviewControlFrame, text=str(round(sliderV.get())), fg_color="transparent")
         
 
-        labelV.grid(row=3, column=3, columnspan=1, padx=10, pady=10)
-        sliderV.grid(row=3, column=4, padx=10, pady=10)
+        labelV.grid(row=3, column=2, columnspan=1, padx=10, pady=10)
+        sliderV.grid(row=3, column=3, padx=10, pady=10)
         self.labelVvalue.grid(row=3, column=5, columnspan=1, padx=10, pady=10)
         
 
@@ -166,14 +167,14 @@ class App(customtkinter.CTk):
         sliderD.bind("<ButtonRelease-1>", lambda event: self.updateValueD(sliderD.get(),self.getIP(self.letter_combobox.get())))
         self.labelDvalue = customtkinter.CTkLabel(self.tabviewControlFrame, text=str(round(sliderV.get())), fg_color="transparent")
         
-        labelD.grid(row=4, column=3, columnspan=1, padx=10, pady=10)
-        sliderD.grid(row=4, column=4, padx=10, pady=10)
+        labelD.grid(row=4, column=2, columnspan=1, padx=10, pady=10)
+        sliderD.grid(row=4, column=3, padx=10, pady=10)
         self.labelDvalue.grid(row=4, column=5, columnspan=1, padx=10, pady=10)
         
        
         #######SUB PESTAÑAS CONTROLADOR #####
         self.subTabView=customtkinter.CTkTabview(self.tabviewControl)
-        self.subTabView.grid(padx=10, pady=10,sticky='ew')
+        self.subTabView.grid(column=0,padx=10, pady=10,sticky='ew')
         self.subTabView.add("Theta")
         self.subTabView.add("Velocidad")
         self.subTabView.add("Distancia")
