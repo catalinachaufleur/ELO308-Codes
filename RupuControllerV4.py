@@ -454,9 +454,7 @@ class App(customtkinter.CTk):
         switch.grid(row=len(self.ip_entry_widgets) + 8, column=1, padx=10, pady=10)
         validar_button.grid(row=len(self.ip_entry_widgets) +8, column=2, padx=10, pady=10)
         
-        self.labelRobot.grid(row=len(self.ip_entry_widgets) + 9, column=1, padx=10, pady=10) 
-        self.letter_combobox.grid(row=len(self.ip_entry_widgets) + 9, column=2, padx=10, pady=10)
-
+        
         #Sliders
         labelV.grid(row=len(self.ip_entry_widgets) + 10, column=1, columnspan=1, padx=10, pady=10)
         sliderV.grid(row=len(self.ip_entry_widgets) + 10, column=2, padx=10, pady=10)
