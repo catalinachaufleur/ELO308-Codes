@@ -34,7 +34,7 @@ sock_RX = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock_RX.bind((UDP_IP_RX, UDP_PORT_RX))
 
 #---------------------------------------------------------
-file_name = "monitoreo10.csv"  # archivo csv
+file_name = "monitoreo5.csv"  # archivo csv
 texto = open(file_name,'w')
 #estado = "T,"+String(Input_d)+","+String(d_ref)+","+String(vel_ref)+","+String(Input_vel)+","+String(Input_theta)+","+String(Output_d)+","+String(Output_vel)+","+String(Output_theta);
  
