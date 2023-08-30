@@ -34,7 +34,7 @@ sock_RX = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock_RX.bind((UDP_IP_RX, UDP_PORT_RX))
 
 #---------------------------------------------------------
-file_name = "monitoreo.csv"  # archivo csv
+file_name = "monitoreo100.csv"  # archivo csv
 texto = open(file_name,'w')
 #estado = "T,"+String(Input_d)+","+String(d_ref)+","+String(vel_ref)+","+String(Input_vel)+","+String(Input_theta)+","+String(Output_d)+","+String(Output_vel)+","+String(Output_theta);
  
@@ -359,10 +359,6 @@ class App(customtkinter.CTk):
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
         MESSAGE = "E/cd_ref/" + str(round(15))
 
-        UDP_IP_TX = self.ip_entry_widgets[3][0].get()
-        sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
-        MESSAGE = "E/cd_ref/" + str(round(15))
-
 
     def vuelta3(self):
         UDP_IP_TX = self.ip_entry_widgets[0][0].get()
@@ -378,9 +374,7 @@ class App(customtkinter.CTk):
         sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
         MESSAGE = "E/cd_ref/" + str(round(10)) 
 
-        UDP_IP_TX = self.ip_entry_widgets[3][0].get()
-        sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
-        MESSAGE = "E/cd_ref/" + str(round(10))
+
 
     
 
