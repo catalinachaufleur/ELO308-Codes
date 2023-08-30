@@ -33,7 +33,7 @@ UDP_PORT_RX = 1234
 sock_RX = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock_RX.bind((UDP_IP_RX, UDP_PORT_RX))
 
-intento=1
+intento=5
 
 file_name = "intento"+str(intento)+".csv"  # archivo csv
 texto = open(file_name,'w')
@@ -101,7 +101,7 @@ for i in range(len(robots)-1):
     sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
 
-tm.sleep(10)
+tm.sleep(5)
 
 #iniciar monitoreo
 dataCollector1 = threading.Thread(target=GetData, args=(file_name,))
@@ -116,7 +116,7 @@ print(MESSAGE)
 sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
   
-tm.sleep(15) 
+tm.sleep(10) 
 
 #####################################ETAPA 2####################################################
 #velocidad 20, distancia 10
@@ -134,7 +134,7 @@ for i in range(len(robots)-1):
     sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
 #DURACIÓN ETAPA 2
-tm.sleep(15) 
+tm.sleep(10) 
 
 
 #####################################ETAPA 3####################################################
@@ -147,14 +147,14 @@ sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
 for i in range(len(robots)-1):
     UDP_IP_TX = robots[i+1]
-    dist =20
+    dist =15
     MESSAGE = "E/cd_ref/" + str(dist)
     print(MESSAGE, UDP_IP_TX)
     sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
 
 #DURACIÓN ETAPA 3
-tm.sleep(15) 
+tm.sleep(10) 
 
 #####################################ETAPA 4####################################################
 #velocidad 10, distancia 5
@@ -173,7 +173,46 @@ for i in range(len(robots)-1):
 
 
 #DURACIÓN ETAPA 4
-tm.sleep(15) 
+tm.sleep(10) 
+#####################################ETAPA 4####################################################
+#velocidad 20, distancia 5
+UDP_IP_TX = robots[0]
+UDP_PORT_TX = 1111        
+MESSAGE = "E/cv_ref/" + str(round(20))
+print(MESSAGE)
+sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
+
+for i in range(len(robots)-1):
+    UDP_IP_TX = robots[i+1]
+    dist =5
+    MESSAGE = "E/cd_ref/" + str(dist)
+    print(MESSAGE, UDP_IP_TX)
+    sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
+
+
+#DURACIÓN ETAPA 4
+tm.sleep(10) 
+
+
+#####################################ETAPA 4####################################################
+#velocidad 10, distancia 5
+UDP_IP_TX = robots[0]
+UDP_PORT_TX = 1111        
+MESSAGE = "E/cv_ref/" + str(round(20))
+print(MESSAGE)
+sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
+
+for i in range(len(robots)-1):
+    UDP_IP_TX = robots[i+1]
+    dist =10
+    MESSAGE = "E/cd_ref/" + str(dist)
+    print(MESSAGE, UDP_IP_TX)
+    sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
+
+
+#DURACIÓN ETAPA 4
+tm.sleep(10) 
+
 
 ######################DETENER
 UDP_IP_TX = robots[0]

@@ -37,7 +37,7 @@ sock_RX = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock_RX.bind((UDP_IP_RX, UDP_PORT_RX))
 
 #---------------------------------------------------------
-file_name = "monitor.csv"  # archivo csv
+file_name = "monitorzoom.csv"  # archivo csv
 texto = open(file_name,'w')
 #estado = "T,"+String(Input_d)+","+String(d_ref)+","+String(vel_ref)+","+String(Input_vel)+","+String(Input_theta)+","+String(Output_d)+","+String(Output_vel)+","+String(Output_theta);
  
@@ -117,6 +117,7 @@ class App(customtkinter.CTk):
 
         #Botones Calibrar y Controlar
         self.calibrar_button = customtkinter.CTkButton(self.tabviewConfig, width = 80,text="Calibrar", command=self.clickCalibrarButton)
+        self.guardar_button = customtkinter.CTkButton(self.tabviewConfig, width = 80,text="Guardar", command=self.clickGuardarButton)
         
         #-----------------Contenido Tab Control----------#
         self.tabviewControl = customtkinter.CTkFrame(self.tabview.tab("Control"),fg_color='transparent')
@@ -133,17 +134,13 @@ class App(customtkinter.CTk):
         self.switch.grid(row=0, column=2, padx=10, pady=10)
              
         #crear lista de letras desplegable
-        self.letras_lista = []
-        
-        self.letras_lista = [entry[1].get() for entry in self.ip_entry_widgets]
-        
-        if len(self.letras_lista)>1:
-            self.letras_lista.append("ALL")
-            
+                    
         self.labelRobot = customtkinter.CTkLabel(self.tabviewControlFrame, text="Etiqueta robot:")
         self.labelRobot.grid(row=2, column=2, padx=10, pady=10) 
         
         self.selected_letter = customtkinter.StringVar()
+
+        self.letras_lista=[]
     
         self.letter_combobox = customtkinter.CTkComboBox(self.tabviewControlFrame, values=self.letras_lista,variable=self.selected_letter)
         self.letter_combobox.set("L")
@@ -323,8 +320,9 @@ class App(customtkinter.CTk):
     #Posiciona botones Calibrar y Controlar
     def create_widgets(self):
           
-        self.calibrar_button.grid(row=len(self.ip_entry_widgets) + 5, column=2,columnspan=2, padx=5, pady=5)
-
+        self.calibrar_button.grid(row=len(self.ip_entry_widgets) + 5, column=1,columnspan=2, padx=5, pady=5)
+        self.guardar_button.grid(row=len(self.ip_entry_widgets) + 5, column=3,columnspan=2, padx=5, pady=5)
+       
     ######------Funciones de Control --------######    
     
     def clickCalibrarButton(self):
@@ -335,6 +333,19 @@ class App(customtkinter.CTk):
             sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
             print("message:", MESSAGE, "IP:", UDP_IP_TX)
             tm.sleep(0.2)
+
+    def clickGuardarButton(self):
+        self.letras_lista = [entry[1].get() for entry in self.ip_entry_widgets]
+
+        if len(self.letras_lista)>1:
+            self.letras_lista.append("ALL")
+    
+        self.letter_combobox = customtkinter.CTkComboBox(self.tabviewControlFrame, values=self.letras_lista,variable=self.selected_letter)
+        self.letter_combobox.set("L")
+        self.letter_combobox.grid(row=2, column=3, padx=10, pady=10)
+
+            
+        
             
     #Función Iniciar  
     def clickIniciarButton(self):
