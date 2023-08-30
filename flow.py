@@ -33,24 +33,23 @@ UDP_PORT_RX = 1234
 sock_RX = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock_RX.bind((UDP_IP_RX, UDP_PORT_RX))
 
-file_name = "monitoreo.csv"  # archivo csv
-texto = open(file_name,'w')
-#estado = "T,"+String(Input_d)+","+String(d_ref)+","+String(vel_ref)+","+String(Input_vel)+","+String(Input_theta)+","+String(Output_d)+","+String(Output_vel)+","+String(Output_theta);
- 
-texto.write('Robot,Delta_muestra,Input_d,d_ref,vel_ref,Input_vel,Input_theta,Output_d,Output_vel,Output_theta'+'\n')
-texto.close()
 
 
-def GetData():
 
-        while True:
+def GetData(file_name,flag):
+
+    while True:
             data, addr = sock_RX.recvfrom(4096)
             testo = str(data.decode('utf-8'))
             lista = testo.split(",")
             texto = open(file_name, "a")
-            texto.write(testo+"u"+'\n')
+            data, addr = sock_RX.recvfrom(4096)
+            texto.write(testo+'\n')
             texto.close()
-    
+
+
+
+               
             #figure.suptitle("Señal robot " + self.letter_combobox.get(), fontsize=16)
  
 
@@ -72,37 +71,82 @@ for ip in reversed(robots):
             sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
             print("message:", MESSAGE, "IP:", UDP_IP_TX)
             tm.sleep(0.2)
+
+
+intentos = 5
+
+for intento in range(intentos):
+    flag=True
+       
+    file_name = "intento"+str(intento)+".csv"  # archivo csv
+    texto = open(file_name,'w')
+    #estado = "T,"+String(Input_d)+","+String(d_ref)+","+String(vel_ref)+","+String(Input_vel)+","+String(Input_theta)+","+String(Output_d)+","+String(Output_vel)+","+String(Output_theta);
+    
+    texto.write('Robot,Delta_muestra,Input_d,d_ref,vel_ref,Input_vel,Input_theta,Output_d,Output_vel,Output_theta'+'\n')
+    texto.close()
+                
+    
+    #iniciar
+    UDP_IP_TX = robots[0]
+    UDP_PORT_TX = 1111
+    MESSAGE = "E/parar/no"
+    sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
             
-#iniciar
-UDP_IP_TX = robots[0]
-UDP_PORT_TX = 1111
-MESSAGE = "E/parar/no"
-sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
-        
-for i in range(len(robots)-1):
-    UDP_IP_TX = robots[i+1]
-    dist =10
-    MESSAGE = "E/cd_ref/" + str(dist)
-    print(MESSAGE, UDP_IP_TX)
+    for i in range(len(robots)-1):
+        UDP_IP_TX = robots[i+1]
+        dist =10
+        MESSAGE = "E/cd_ref/" + str(dist)
+        print(MESSAGE, UDP_IP_TX)
+        sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
+
+
+    tm.sleep(2)
+
+    #iniciar monitoreo
+    dataCollector1 = threading.Thread(target=GetData, args=(file_name,flag,))
+    dataCollector1.start()
+
+    #etapa  1 #velocidad 10, distancia 10
+    UDP_IP_TX = robots[0]
+    UDP_PORT_TX = 1111        
+    MESSAGE = "E/cv_ref/" + str(round(10))
+    print(MESSAGE)
     sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
-tm.sleep(0.5)
-#etapa  1
-UDP_IP_TX = robots[0]
-UDP_PORT_TX = 1111        
-MESSAGE = "E/cv_ref/" + str(round(10))
-print(MESSAGE)
-sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
+  
+    tm.sleep(1) 
+    """
+    #etapa  2 #velocidad 20, distancia 10
+    UDP_IP_TX = robots[0]
+    UDP_PORT_TX = 1111        
+    MESSAGE = "E/cv_ref/" + str(round(20))
+    print(MESSAGE)
+    sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
+    for i in range(len(robots)-1):
+            UDP_IP_TX = robots[i+1]
+            dist =10
+            MESSAGE = "E/cd_ref/" + str(dist)
+            print(MESSAGE, UDP_IP_TX)
+            sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
-dataCollector1 = threading.Thread(target=GetData)
-dataCollector1.start()
-tm.sleep(5)
+    #etapa 3 #velocidad 10, distancia 20
+    UDP_IP_TX = robots[0]
+    UDP_PORT_TX = 1111        
+    MESSAGE = "E/cv_ref/" + str(round(20))
+    print(MESSAGE)
+    sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
 
+    for i in range(len(robots)-1):
+            UDP_IP_TX = robots[i+1]
+            dist =10
+            MESSAGE = "E/cd_ref/" + str(dist)
+            print(MESSAGE, UDP_IP_TX)
+            sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
+    """
 
-UDP_IP_TX = robots[0]
-UDP_PORT_TX = 1111        
-MESSAGE = "E/cv_ref/" + str(round(20))
-print(MESSAGE)
-sock.sendto(bytes(MESSAGE, "utf-8"), (UDP_IP_TX, UDP_PORT_TX))
+    flag=False
+     
+
+    input("Presione Enter")
 
