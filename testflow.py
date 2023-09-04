@@ -61,15 +61,6 @@ def GetData(file_name,):
                
             #figure.suptitle("Señal robot " + self.letter_combobox.get(), fontsize=16)
  
-
-"""
-robots=[]
-n_robots=int(input("Número de robots: "))
-
-for i in range(n_robots):
-    ip=input("Ingrese IP")
-    robots.append(ip)
-"""
 robots=["192.168.1.105","192.168.1.104","192.168.1.106"]
 calibrar=input("¿Calibrar? (S/N)")
 

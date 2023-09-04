@@ -37,7 +37,7 @@ sock_RX = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock_RX.bind((UDP_IP_RX, UDP_PORT_RX))
 
 #---------------------------------------------------------
-file_name = "monitorzoom.csv"  # archivo csv
+file_name = "monitortest.csv"  # archivo csv
 texto = open(file_name,'w')
 #estado = "T,"+String(Input_d)+","+String(d_ref)+","+String(vel_ref)+","+String(Input_vel)+","+String(Input_theta)+","+String(Output_d)+","+String(Output_vel)+","+String(Output_theta);
  
@@ -53,6 +53,8 @@ max_d = 25
 gData1 = [[0], [0]]
 gData2 = [[0], [0]]
 gData3 = [[0], [0]]
+
+flag_save=True
 
 class App(customtkinter.CTk):
     
@@ -117,7 +119,7 @@ class App(customtkinter.CTk):
 
         #Botones Calibrar y Controlar
         self.calibrar_button = customtkinter.CTkButton(self.tabviewConfig, width = 80,text="Calibrar", command=self.clickCalibrarButton)
-        self.guardar_button = customtkinter.CTkButton(self.tabviewConfig, width = 80,text="Guardar", command=self.clickGuardarButton)
+        self.guardar_button = customtkinter.CTkButton(self.tabviewConfig, width = 80,text="Guardar IP", command=self.clickGuardarButton)
         
         #-----------------Contenido Tab Control----------#
         self.tabviewControl = customtkinter.CTkFrame(self.tabview.tab("Control"),fg_color='transparent')
@@ -132,6 +134,12 @@ class App(customtkinter.CTk):
         self.switch_var = customtkinter.StringVar(value="off")
         self.switch = customtkinter.CTkSwitch(self.tabviewControlFrame, text="Estado Robot", command=self.switch_event,variable=self.switch_var, onvalue="on", offvalue="off")
         self.switch.grid(row=0, column=2, padx=10, pady=10)
+
+        self.switchSave_var = customtkinter.StringVar(value="1")
+        self.savetext ="Guardar "+ file_name
+        self.switchSave = customtkinter.CTkSwitch(self.tabviewControlFrame, text=self.savetext, command=self.switchSave_event,variable=self.switchSave_var, onvalue="1", offvalue="0")
+        self.switchSave.grid(row=0, column=3, padx=10, pady=10)
+             
              
         #crear lista de letras desplegable
                     
@@ -250,7 +258,11 @@ class App(customtkinter.CTk):
     
         self.submit_dist_btn =customtkinter.CTkButton(self.subTabDist, text="Enviar", command=self.submit_dist)
         self.submit_dist_btn.grid(row=2, column=1, padx=5, pady=5)
-         
+
+
+        self.monitor_button = customtkinter.CTkButton(self.tabviewControlFrame, text="Monitorear Señales", command=self.start_monitoring_vel)
+        self.monitor_button.grid(row=8, column=2,columnspan=2, padx=10, pady=10)
+
     
     #Crea y guarda las entradas de IP y Label
     def submit_theta(self):
@@ -343,6 +355,7 @@ class App(customtkinter.CTk):
         self.letter_combobox = customtkinter.CTkComboBox(self.tabviewControlFrame, values=self.letras_lista,variable=self.selected_letter)
         self.letter_combobox.set("L")
         self.letter_combobox.grid(row=2, column=3, padx=10, pady=10)
+        #self.tabview.select(self.tabviewControlFrame)
 
             
         
@@ -374,11 +387,18 @@ class App(customtkinter.CTk):
         print("message:", MESSAGE, "IP:",UDP_IP_TX)
 
     def switch_event(self):
-        print("switch toggled, current value:", self.switch_var.get())
+        #print("switch toggled, current value:", self.switch_var.get())
         if self.switch_var.get() =="on":
             self.clickIniciarButton()
         else:
             self.clickStopButton()
+
+    def switchSave_event(self):
+        if self.switchSave_var.get() =="1":
+            flag_save = True
+        else:
+            flag_save = False
+            
             
     def updateValueV(self, value,IP):
         self.labelVvalue.configure(text="")
@@ -438,6 +458,95 @@ class App(customtkinter.CTk):
             return targetIP
         else:
             return "ALL"
+        
+
+    def GetData(self, out_data,dato,figure):
+
+        while True:
+            data, addr = sock_RX.recvfrom(4096)
+            testo = str(data.decode('utf-8'))
+            lista = testo.split(",")
+            print (self.switchSave_var.get())
+            if int(self.switchSave_var.get()) :
+                texto = open(file_name, "a")
+                texto.write(testo+'\n')
+                texto.close()
+            #print(self.letter_combobox.get())
+            #figure.suptitle("Señal robot " + self.letter_combobox.get(), fontsize=16)
+            
+            if lista[0] == self.letter_combobox.get():
+                out_data[1].append(float(lista[dato]))
+                if len(out_data[1]) > 100:
+                    out_data[1].pop(0)
+
+
+    def animate_vel(self):
+        
+        fig, axes = plt.subplots(3, 1, figsize=(8, 12))
+        #fig.suptitle('Señales de monitoreo robot '+ self.letter_combobox.get(), fontsize=14) 
+        plt.subplots_adjust(top=0.9, hspace=0.5)  
+
+        lines = []
+
+        for ax in axes:
+            line, = ax.plot([], [])
+            lines.append(line)
+
+        axes[0].set_title('Velocidad', fontsize=12)
+        axes[0].set_xlim(0, 100)
+        axes[0].set_ylim(0, 30)
+
+        axes[1].set_title('Distancia Predecesor', fontsize=12)
+        axes[1].set_xlim(0, 100)
+        axes[1].set_ylim(0, 20)
+
+        axes[2].set_title('Ángulo de inclinación', fontsize=12)
+        axes[2].set_xlim(0, 100)
+        axes[2].set_ylim(-1, 1)
+        
+        """
+        for ax in axes:
+            ax.set_ylim(0, 30)
+            ax.set_xlim(0, 200)
+        """
+        
+
+        def update_line(num, lines, data):
+            for line, d in zip(lines, data):
+                line.set_data(range(len(d[1])), d[1])
+            return lines
+       
+        line_ani = animation.FuncAnimation(fig, update_line, fargs=(lines, [gData1, gData2, gData3]),interval=50, blit=True, cache_frame_data=False)
+
+        dataCollector1 = threading.Thread(target=self.GetData, args=(gData1, 5,fig))
+        dataCollector2 = threading.Thread(target=self.GetData, args=(gData2, 2,fig))
+        dataCollector3 = threading.Thread(target=self.GetData, args=(gData3, 6,fig))
+
+        #dataCollector1.setDaemon(True)
+
+        dataCollector1.start()
+        dataCollector2.start()
+        dataCollector3.start()
+
+
+        fig.canvas.manager.window.wm_geometry("+1000+0")
+        plt.show()
+        
+        
+        def on_close(event):
+            '''dataCollector1.join()  # Esperar a que el hilo termine
+            dataCollector2.join()
+            dataCollector3.join()
+            sys.exit(0)  # Salir del programa'''
+
+        # Configurar el evento de cierre de la ventana
+        fig.canvas.mpl_connect('close_event', on_close)
+        
+        
+            
+
+    def start_monitoring_vel(self):
+        self.animate_vel()    
     
     
     def on_closing(self):
