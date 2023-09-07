@@ -1,10 +1,10 @@
 #RupuControlerV5
 
-import tkinter as tk
-import customtkinter 
+import tkinter as tk #PIP
+import customtkinter #I
 
 from tkinter import ttk
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg #pip
 import time as tm
 
 import socket
@@ -15,7 +15,7 @@ import matplotlib.animation as animation
 import threading 
 #Librerias
 import sys
-import paho.mqtt.client as mqtt #descargar
+import paho.mqtt.client as mqtt #descargar #install
 import pymysql #descargar
 import csv
 
