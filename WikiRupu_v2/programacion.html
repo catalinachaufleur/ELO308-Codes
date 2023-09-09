@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/styles.css">
   <title>Programación - RÜPÜ</title>
-  <link rel="icon" type="image/x-icon" href="iconRupu.ico"/>
+  <link rel="icon" type="image/x-icon" href="img\iconRupu.ico"/>
 </head>
 <body>
 <header>
-  <div class="logo"><img src="logoRupuBlanco.png" alt="Logo" width="100"></div>
+  <div class="logo"><img src="img\logoRupuBlanco.png" alt="Logo" width="100"></div>
   <nav class="header-links">
     <a href="Rüpü.html">Sobre el Proyecto</a>
     <a href="documentation.html">Documentación</a>
     <a href="https://github.com/catalinachaufleur/ELO308-Codes" target="_blank">
-      <img src="github-logo.png" alt="GitHub" width="30" height="30">
+      <img src="img\github-logo.png" alt="GitHub" width="30" height="30">
     </a>
   </nav>
 </header>
@@ -22,7 +22,7 @@
 <div class="container">
   <aside class="sidebar">
     <div class="sidebar-image">
-      <img src="robot.png" alt="Imagen de la barra lateral" width="70%">
+      <img src="img\robot.png" alt="Imagen de la barra lateral" width="70%">
     </div>
     <nav>
       <ul>
@@ -60,7 +60,7 @@
       <!--Paso 1:elección robots -->
       <li>Comienza escogiendo los robots que utilizarás y escoge sus posiciones en la pista (líder, segundo, tercero, etc).</li>
       <div class="centered-image">
-        <img src="filarobots.jpg" alt="IP get">
+        <img src="img\filarobots.jpg" alt="IP get">
       </div>
 
       <!--Paso 2:tabla -->
@@ -115,7 +115,7 @@
       </p>
 
       <div class="centered-image">
-        <img src="ipconfig.gif" alt="IP get">
+        <img src="img\ipconfig.gif" alt="IP get">
       </div>
 
       <!--Paso 4 Configurar código -->
@@ -134,18 +134,18 @@
         </ul>
 
         <div class="centered-image">
-          <img src="wifi.gif" alt="IP get">
+          <img src="img\wifi.gif" alt="IP get">
         </div>
 
       <!--Cargar código-->
       <li>Luego, se debe conectar el último robot en la fila. Para poder utilizarlo, se debe escoger el Gestor de Tarjeta <b> ESP32 Dev Module</b> y el COM respectivo en el IDE de Arduino </li>
       <div class="centered-image">
-        <img src="com.gif" alt="COM">
+        <img src="img\com.gif" alt="COM">
       </div>
 
       <p class="content-paragraph"> En caso de que no aparezca nada, presiona el botón de reset en la placa</p>
       <div class="centered-image">
-        <img src="reset.gif" alt="reset">
+        <img src="img\reset.gif" alt="reset">
       </div>
 
       <li>Con la IP asignada al último robot, se debe editar nuevamente el código para cargarlo en el siguiente robot en la línea (de atrás hacia adelante). Al editar el código se debe tener en cuenta que:</li>
@@ -156,13 +156,13 @@
 
       <li> Se sube el código y se verifica la IP obtenida en el monitor serial.</li>
         <div class="centered-image">
-          <img src="iprobot2.gif" alt="siguiente robot">
+          <img src="img\iprobot2.gif" alt="siguiente robot">
         </div>
 
       <li> Con la IP obtenida de este nuevo robot, se repiten los pasos 7, 8 y 9 hasta llegar al <b>robot líder</b> cuya variable <b>etiquetaRobot</b> debe ser la letra "L"</li>
       <li>Finalmente, una vez se h subi el código en cada uno de los robots y habiendo completado la tabla con la información sobre la IP de cada uno, es momento de posicionar los robots en la pista, encendiendo los interruptores ubicados en el costado derecho</li>
       <div class="centered-image">
-        <img src="posicionar.gif" alt="siguiente robot">
+        <img src="img\posicionar.gif" alt="siguiente robot">
       </div>
     </ol>
 
@@ -171,12 +171,12 @@
     </p>
 
     <div class="centered-image">
-      <a href="https://youtu.be/1T3hHIe9xE0" class="image-link ">
-        <img src="demo1.jpg" alt="Demo 1 ">
+      <a href="https://youtu.be/dDjok7HUWV8" class="image-link ">
+        <img src="img\demo1.jpg" alt="Demo 1 ">
       </a>
     </div>
 
-    
+
     <h2> Control y monitoreo </h2>
     <p class="content-paragraph">
       El primer paso para controlar los dispositivos es ejecutar el código RupuGUI.py disponible en el repositorio GIT de RUPU. Para esto, hay que descargar el código y, si seguiste las instrucciones de la sección <a href="entorno.html">Entorno de trabajo</a> entonces sólo debes darle doble click al programa para que se abra la siguiente ventana.
@@ -184,19 +184,19 @@
 
     <ol>
       <div class="centered-image">
-        <img src="gui.jpg" alt="gui config">
+        <img src="img\gui.jpg" alt="gui config">
       </div>
-      <li> Luego, se debe etear el número de robots a utilizar.</li>
+      <li> Luego, se debe setear el número de robots a utilizar.</li>
       <div class="centered-image">
-        <img src="gui_robots.gif" alt="gui robots">
+        <img src="img\gui_robots.gif" alt="gui robots">
       </div>
       <li> Considerando el cuadro de IP realizado en la sección de Configuración, se deben completar las entradas IP de cada robot junto a su respectiva etiqueta. No olvidar guardar la configuración y en caso de que no se hayas hecho antes, se deben calibrar los robots cada vez que se encienden o reinician.</li>
       <div class="centered-image">
-        <img src="gui_ip.gif" alt="gui ip">
+        <img src="img\gui_ip.gif" alt="gui ip">
       </div>
       <li> Una vez que la calibración se realiza por todos los agentes de forma exitosa, entonces es posible controlar la plataforma accediendo a la pestaña de Control</li>
       <div class="centered-image">
-        <img src="gui_control.gif" alt="gui control tab">
+        <img src="img\gui_control.gif" alt="gui control tab">
       </div>
     </ol>
 
