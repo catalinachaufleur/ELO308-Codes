@@ -15,7 +15,7 @@
 
 #define IP_monitoreo "192.168.1.100"     //ip del dispositivo que va a supervisar los datos 
 #define puerto_monitoreo 1234           //puerto de envio UDP monitoreo
-#define IP_sucesor "192.168.1.104"   //ip del robot sucesor
+#define IP_sucesor "192.168.1.105"   //ip del robot sucesor
 #define puerto_sucesor 1111          //puerto del robot sucesor
 #define puerto_local 1111               //puerto local
 ////////
